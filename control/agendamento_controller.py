@@ -1,12 +1,12 @@
 class AgendamentoController:
     def criar_agendamento(self, dados):
-        raise NotImplementedError
+        pass
 
     def listar_agendamentos(self):
-        raise NotImplementedError
+        pass
 
     def concluir(self, id: int):
-        raise NotImplementedError
+        pass
 
     def cancelar(self, id: int):
-        raise NotImplementedError
+        pass

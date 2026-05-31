@@ -3,13 +3,13 @@ from typing import Any, List
 
 class GenericDAO:
     def salvar(self, obj: Any) -> None:
-        raise NotImplementedError
+        pass
 
     def listar_todos(self) -> List[Any]:
-        raise NotImplementedError
+        pass
 
     def remover(self, obj: Any) -> None:
-        raise NotImplementedError
+        pass
 
     def atualizar(self, obj: Any) -> None:
-        raise NotImplementedError
+        pass

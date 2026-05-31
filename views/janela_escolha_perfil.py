@@ -1,6 +1,6 @@
 class JanelaEscolhaPerfil:
     def abrir_admin(self):
-        raise NotImplementedError
+        pass
 
     def abrir_cliente(self):
-        raise NotImplementedError
+        pass
