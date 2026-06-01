@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from .servico import Service
+from .Service import Service
 
 
 class PriceStrategy(ABC):
