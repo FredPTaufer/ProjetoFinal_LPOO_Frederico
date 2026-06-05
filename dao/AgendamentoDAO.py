@@ -273,3 +273,34 @@ class AgendamentoDAO(GenericDAO):
             status       = status,
             id           = age_id
         )
+        
+    def verificar_conflito(self, id_profissional: int, data_hora: datetime, ignorar_id: int = None) -> bool:
+        """
+        Retorna True se já existe agendamento ativo para o mesmo
+        profissional no mesmo horário.
+        """
+        if not self.conexao:
+            return False
+        cursor = None
+        try:
+            cursor = self.conexao.cursor()
+            query = """
+                SELECT 1 FROM tb_agendamentos
+                WHERE age_pro_id   = %s
+                AND   age_data_hora = %s
+                AND   age_status   != 'cancelado'
+            """
+            params = [id_profissional, data_hora]
+
+            if ignorar_id:
+                query += " AND age_id != %s"
+                params.append(ignorar_id)
+
+            cursor.execute(query, tuple(params))
+            return cursor.fetchone() is not None
+        except Exception as e:
+            print(f"Erro ao verificar conflito: {e}")
+            return False
+        finally:
+            if cursor:
+                cursor.close()

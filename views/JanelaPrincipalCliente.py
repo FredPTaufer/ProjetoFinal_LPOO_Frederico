@@ -1,0 +1,72 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+import tkinter as tk
+
+from views.JanelaNovoAgendamento import JanelaNovoAgendamento
+from views.JanelaMeusAgendamentos import JanelaMeusAgendamentos
+from views.JanelaHistoricoCliente import JanelaHistoricoCliente
+from views.JanelaSobre import JanelaSobre
+
+
+class JanelaPrincipalCliente(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title("Salao de Beleza - Cliente")
+        self.geometry("420x240")
+        self.resizable(False, False)
+
+        self._criar_menu()
+        self._criar_tela_inicial()
+
+    def _criar_menu(self):
+        barra_menu = tk.Menu(self)
+        self.config(menu=barra_menu)
+
+        # Menu Agendamento
+        menu_agenda = tk.Menu(barra_menu, tearoff=0)
+        barra_menu.add_cascade(label="Agendamento", menu=menu_agenda)
+        menu_agenda.add_command(label="Novo Agendamento",  command=self._abrir_novo_agendamento)
+        menu_agenda.add_command(label="Meus Agendamentos", command=self._abrir_meus_agendamentos)
+        menu_agenda.add_command(label="Meu Historico",     command=self._abrir_historico)
+
+        # Menu Sistema
+        menu_sistema = tk.Menu(barra_menu, tearoff=0)
+        barra_menu.add_cascade(label="Sistema", menu=menu_sistema)
+        menu_sistema.add_command(label="Sobre", command=self._abrir_sobre)
+        menu_sistema.add_separator()
+        menu_sistema.add_command(label="Sair",  command=self._sair)
+
+    def _criar_tela_inicial(self):
+        tk.Label(self, text="Bem-vindo ao Salao!",
+                 font=("Helvetica", 16, "bold")).pack(pady=(30, 5))
+        tk.Label(self, text="Perfil: Cliente",
+                 font=("Helvetica", 10), fg="#5cb85c").pack(pady=2)
+        tk.Frame(self, height=1, bg="lightgray").pack(fill="x", padx=20, pady=12)
+        tk.Label(self,
+                 text="Agendamento: Novo / Meus Agendamentos / Historico\n"
+                      "Sistema: Sobre | Sair",
+                 font=("Helvetica", 9), fg="gray", justify="center").pack()
+
+    def _abrir_novo_agendamento(self):
+        janela = JanelaNovoAgendamento(self)
+        self.wait_window(janela)
+
+    def _abrir_meus_agendamentos(self):
+        janela = JanelaMeusAgendamentos(self)
+        self.wait_window(janela)
+
+    def _abrir_historico(self):
+        janela = JanelaHistoricoCliente(self)
+        self.wait_window(janela)
+
+    def _abrir_sobre(self):
+        janela = JanelaSobre(self)
+        self.wait_window(janela)
+
+    def _sair(self):
+        from views.JanelaEscolhaPerfil import JanelaEscolhaPerfil  # import aqui dentro
+        self.destroy()
+        app = JanelaEscolhaPerfil()
+        app.mainloop()

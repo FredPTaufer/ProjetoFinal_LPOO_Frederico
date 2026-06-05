@@ -24,7 +24,6 @@ def _string_para_estrategia(valor: str):
 
 
 class AgendamentoController:
-
     def __init__(self):
         self.agendamento_dao = AgendamentoDAO()
         self.cliente_dao     = ClienteDAO()
@@ -52,14 +51,19 @@ class AgendamentoController:
             print(f"Erro ao buscar agendamentos do cliente: {e}")
             return []
 
-    def criar_agendamento(self, id_cliente: int, id_profissional: int,
-                          id_servico: int, data_hora_str: str,
-                          estrategia_str: str = "normal"):
+    def criar_agendamento(self, id_cliente: int, id_profissional: int, id_servico: int, data_hora_str: str, estrategia_str: str = "normal"):
         if not id_cliente or not id_profissional or not id_servico or not data_hora_str:
-            return False, "Todos os campos sao obrigatorios."
+            return False, "Todos os campos são obrigatórios."
 
         try:
             data_hora = datetime.strptime(data_hora_str.strip(), "%d/%m/%Y %H:%M")
+
+            if self.agendamento_dao.verificar_conflito(id_profissional, data_hora):
+                return False, (
+                    f"O profissional já possui um agendamento em "
+                    f"{data_hora.strftime('%d/%m/%Y as %H:%M')}. "
+                    "Escolha outro horario."
+                )
 
             if data_hora < datetime.now():
                 return False, "A data e hora do agendamento devem ser futuras."
@@ -69,13 +73,13 @@ class AgendamentoController:
             servico      = self.servico_dao.buscar_por_id(id_servico)
 
             if not cliente:
-                return False, "Cliente nao encontrado."
+                return False, "Cliente não encontrado."
             if not profissional:
-                return False, "Profissional nao encontrado."
+                return False, "Profissional não encontrado."
             if not servico:
-                return False, "Servico nao encontrado."
+                return False, "Servico não encontrado."
             if not profissional.disponivel:
-                return False, "Profissional nao esta disponivel."
+                return False, "Profissional não está disponível."
 
             estrategia = _string_para_estrategia(estrategia_str)
             agendamento = Agendamento(
@@ -95,13 +99,9 @@ class AgendamentoController:
         except Exception as e:
             return False, f"Erro ao criar agendamento: {e}"
 
-    def atualizar_agendamento(self, id_agendamento: int, id_cliente: int,
-                              id_profissional: int, id_servico: int,
-                              data_hora_str: str, estrategia_str: str,
-                              status_str: str):
-        if not all([id_agendamento, id_cliente, id_profissional,
-                    id_servico, data_hora_str, estrategia_str, status_str]):
-            return False, "Todos os campos sao obrigatorios."
+    def atualizar_agendamento(self, id_agendamento: int, id_cliente: int, id_profissional: int, id_servico: int, data_hora_str: str, estrategia_str: str, status_str: str):
+        if not all([id_agendamento, id_cliente, id_profissional, id_servico, data_hora_str, estrategia_str, status_str]):
+            return False, "Todos os campos são obrigatórios."
 
         try:
             data_hora = datetime.strptime(data_hora_str.strip(), "%d/%m/%Y %H:%M")
@@ -109,6 +109,14 @@ class AgendamentoController:
             agendamento = self.agendamento_dao.buscar_por_id(id_agendamento)
             if not agendamento:
                 return False, "Agendamento nao encontrado para edicao."
+            
+            if self.agendamento_dao.verificar_conflito(
+                id_profissional, data_hora, ignorar_id=id_agendamento):
+                return False, (
+                    f"O profissional já possui um agendamento em "
+                    f"{data_hora.strftime('%d/%m/%Y as %H:%M')}. "
+                    "Escolha outro horario."
+                )
 
             cliente      = self.cliente_dao.buscar_por_id(id_cliente)
             profissional = self.profissional_dao.buscar_por_id(id_profissional)

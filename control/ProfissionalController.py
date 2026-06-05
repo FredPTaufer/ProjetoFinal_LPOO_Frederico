@@ -8,7 +8,6 @@ from model.ExcecoesPersonalizadas import CpfInvalidoError
 
 
 class ProfissionalController:
-
     def __init__(self):
         self.profissional_dao = ProfissionalDAO()
 
@@ -31,20 +30,18 @@ class ProfissionalController:
             todos = self.profissional_dao.listar_todos()
             return [p for p in todos if p.disponivel]
         except Exception as e:
-            print(f"Erro ao buscar profissionais disponiveis: {e}")
+            print(f"Erro ao buscar profissionais disponíveis: {e}")
             return []
 
     def salvar_profissional(self, nome: str, cpf: str, especialidade: str):
-        if not nome or not cpf or not especialidade:
-            return False, "Todos os campos sao obrigatorios."
+        if not nome.strip() or not cpf.strip() or not especialidade.strip():
+            return False, "Todos os campos são obrigatórios."
 
         try:
-            existente = self.profissional_dao.buscar_por_tipo(especialidade)
-            # Verifica duplicidade de CPF manualmente
             todos = self.profissional_dao.listar_todos()
             cpf_limpo = cpf.strip().replace(".", "").replace("-", "")
             if any(p.cpf == cpf_limpo for p in todos):
-                return False, "Ja existe um profissional cadastrado com este CPF."
+                return False, "Já existe um profissional cadastrado com este CPF."
 
             profissional = Profissional(
                 nome          = nome.strip(),
@@ -60,15 +57,14 @@ class ProfissionalController:
         except Exception as e:
             return False, f"Erro ao salvar profissional: {e}"
 
-    def atualizar_profissional(self, id_profissional: int, nome: str,
-                               especialidade: str, disponivel: bool):
+    def atualizar_profissional(self, id_profissional: int, nome: str, especialidade: str, disponivel: bool):
         if not nome or not especialidade:
-            return False, "Nome e especialidade sao obrigatorios."
+            return False, "Nome e especialidade são obrigatórios."
 
         try:
             profissional = self.profissional_dao.buscar_por_id(id_profissional)
             if not profissional:
-                return False, "Profissional nao encontrado para edicao."
+                return False, "Profissional não encontrado para edição."
 
             profissional.nome          = nome.strip()
             profissional.especialidade = especialidade.strip()

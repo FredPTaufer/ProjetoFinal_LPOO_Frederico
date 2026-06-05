@@ -2,13 +2,12 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from dao.db_config import DatabaseConfig
-from dao.generic_dao import GenericDAO
+from dao.DBConfig import DatabaseConfig
+from dao.GenericDAO import GenericDAO
 from model.Cliente import Cliente
 
 
 class ClienteDAO(GenericDAO):
-
     def __init__(self):
         self.conexao = DatabaseConfig.get_connection()
 
