@@ -37,7 +37,6 @@ class ServicoController:
             if preco <= 0:
                 return False, "O preço deve ser um valor positivo."
 
-            # Verifica se ja existe um servico deste tipo cadastrado
             existente = self.servico_dao.buscar_por_tipo(tipo.strip().lower())
             if existente:
                 return False, f"Já existe um servico do tipo '{tipo}' cadastrado."

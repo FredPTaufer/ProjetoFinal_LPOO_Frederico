@@ -44,8 +44,8 @@ class ProfissionalController:
                 return False, "Já existe um profissional cadastrado com este CPF."
 
             profissional = Profissional(
-                nome          = nome.strip(),
-                cpf           = cpf.strip(),
+                nome = nome.strip(),
+                cpf = cpf.strip(),
                 especialidade = especialidade.strip()
             )
             return self.profissional_dao.salvar(profissional)
@@ -66,9 +66,9 @@ class ProfissionalController:
             if not profissional:
                 return False, "Profissional não encontrado para edição."
 
-            profissional.nome          = nome.strip()
+            profissional.nome = nome.strip()
             profissional.especialidade = especialidade.strip()
-            profissional.disponivel    = disponivel
+            profissional.disponivel = disponivel
 
             return self.profissional_dao.atualizar(profissional)
 

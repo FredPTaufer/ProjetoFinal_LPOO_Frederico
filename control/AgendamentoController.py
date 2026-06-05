@@ -26,9 +26,9 @@ def _string_para_estrategia(valor: str):
 class AgendamentoController:
     def __init__(self):
         self.agendamento_dao = AgendamentoDAO()
-        self.cliente_dao     = ClienteDAO()
+        self.cliente_dao = ClienteDAO()
         self.profissional_dao = ProfissionalDAO()
-        self.servico_dao     = ServicoDAO()
+        self.servico_dao = ServicoDAO()
 
     def listar_agendamentos(self):
         try:
@@ -61,16 +61,16 @@ class AgendamentoController:
             if data_hora < datetime.now():
                 return False, "A data e hora do agendamento devem ser futuras."
 
-            cliente      = self.cliente_dao.buscar_por_id(id_cliente)
+            cliente = self.cliente_dao.buscar_por_id(id_cliente)
             profissional = self.profissional_dao.buscar_por_id(id_profissional)
-            servico      = self.servico_dao.buscar_por_id(id_servico)
+            servico = self.servico_dao.buscar_por_id(id_servico)
 
             if not cliente:
                 return False, "Cliente não encontrado."
             if not profissional:
                 return False, "Profissional não encontrado."
             if not servico:
-                return False, "Servico não encontrado."
+                return False, "Serviço não encontrado."
             if not profissional.disponivel:
                 return False, "Profissional não está disponível."
 
@@ -80,24 +80,24 @@ class AgendamentoController:
                     minute=data_hora.minute + servico.duracao
                 ) if False else None
                 return False, (
-                    f"O profissional ja possui um atendimento neste periodo.\n"
-                    f"O servico '{servico.nome}' dura {servico.duracao} minutos.\n"
-                    "Escolha outro horario."
+                    f"O profissional já possui um atendimento neste período.\n"
+                    f"O serviço '{servico.nome}' dura {servico.duracao} minutos.\n"
+                    "Escolha outro horário."
                 )
 
             estrategia  = _string_para_estrategia(estrategia_str)
             agendamento = Agendamento(
-                cliente      = cliente,
+                cliente = cliente,
                 profissional = profissional,
-                servico      = servico,
-                data_hora    = data_hora,
-                estrategia   = estrategia,
-                status       = StatusAgendamento.AGENDADO
+                servico = servico,
+                data_hora = data_hora,
+                estrategia = estrategia,
+                status = StatusAgendamento.AGENDADO
             )
             return self.agendamento_dao.salvar(agendamento)
 
         except ValueError:
-            return False, "Formato de data invalido. Use DD/MM/AAAA HH:MM."
+            return False, "Formato de data inválido. Use DD/MM/AAAA HH:MM."
         except DataHoraInvalidaError as e:
             return False, str(e)
         except Exception as e:
@@ -112,39 +112,39 @@ class AgendamentoController:
 
             agendamento = self.agendamento_dao.buscar_por_id(id_agendamento)
             if not agendamento:
-                return False, "Agendamento nao encontrado para edicao."
+                return False, "Agendamento não encontrado para edição."
 
-            cliente      = self.cliente_dao.buscar_por_id(id_cliente)
+            cliente = self.cliente_dao.buscar_por_id(id_cliente)
             profissional = self.profissional_dao.buscar_por_id(id_profissional)
-            servico      = self.servico_dao.buscar_por_id(id_servico)
+            servico = self.servico_dao.buscar_por_id(id_servico)
 
             if not cliente:
-                return False, "Cliente nao encontrado."
+                return False, "Cliente não encontrado."
             if not profissional:
-                return False, "Profissional nao encontrado."
+                return False, "Profissional não encontrado."
             if not servico:
-                return False, "Servico nao encontrado."
+                return False, "Serviço não encontrado."
 
             if self.agendamento_dao.verificar_conflito(
                     id_profissional, data_hora, servico.duracao,
                     ignorar_id=id_agendamento):
                 return False, (
-                    f"O profissional ja possui um atendimento neste periodo.\n"
-                    f"O servico '{servico.nome}' dura {servico.duracao} minutos.\n"
-                    "Escolha outro horario."
+                    f"O profissional já possui um atendimento neste período.\n"
+                    f"O serviço '{servico.nome}' dura {servico.duracao} minutos.\n"
+                    "Escolha outro horário."
                 )
 
-            agendamento.cliente      = cliente
+            agendamento.cliente = cliente
             agendamento.profissional = profissional
-            agendamento.servico      = servico
-            agendamento.data_hora    = data_hora
-            agendamento.estrategia   = _string_para_estrategia(estrategia_str)
-            agendamento.status       = StatusAgendamento(status_str.strip().lower())
+            agendamento.servico = servico
+            agendamento.data_hora = data_hora
+            agendamento.estrategia = _string_para_estrategia(estrategia_str)
+            agendamento.status = StatusAgendamento(status_str.strip().lower())
 
             return self.agendamento_dao.atualizar(agendamento)
 
         except ValueError:
-            return False, "Formato de data invalido. Use DD/MM/AAAA HH:MM."
+            return False, "Formato de data inválido. Use DD/MM/AAAA HH:MM."
         except Exception as e:
             return False, f"Erro ao atualizar agendamento: {e}"
 
@@ -152,13 +152,11 @@ class AgendamentoController:
         try:
             agendamento = self.agendamento_dao.buscar_por_id(id_agendamento)
             if not agendamento:
-                return False, "Agendamento nao encontrado."
+                return False, "Agendamento não encontrado."
             if agendamento.status != StatusAgendamento.AGENDADO:
-                return False, "So e possivel concluir um agendamento com status 'agendado'."
+                return False, "Só é possível concluir um agendamento com status 'agendado'."
 
-            return self.agendamento_dao.atualizar_status(
-                id_agendamento, StatusAgendamento.CONCLUIDO
-            )
+            return self.agendamento_dao.atualizar_status(id_agendamento, StatusAgendamento.CONCLUIDO)
         except Exception as e:
             return False, f"Erro ao concluir agendamento: {e}"
 
@@ -166,13 +164,11 @@ class AgendamentoController:
         try:
             agendamento = self.agendamento_dao.buscar_por_id(id_agendamento)
             if not agendamento:
-                return False, "Agendamento nao encontrado."
+                return False, "Agendamento não encontrado."
             if agendamento.status != StatusAgendamento.AGENDADO:
-                return False, "So e possivel cancelar um agendamento com status 'agendado'."
+                return False, "Só é possível cancelar um agendamento com status 'agendado'."
 
-            return self.agendamento_dao.atualizar_status(
-                id_agendamento, StatusAgendamento.CANCELADO
-            )
+            return self.agendamento_dao.atualizar_status(id_agendamento, StatusAgendamento.CANCELADO)
         except Exception as e:
             return False, f"Erro ao cancelar agendamento: {e}"
 

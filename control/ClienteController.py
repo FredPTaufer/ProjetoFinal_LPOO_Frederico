@@ -8,7 +8,6 @@ from model.ExcecoesPersonalizadas import CpfInvalidoError
 
 
 class ClienteController:
-
     def __init__(self):
         self.cliente_dao = ClienteDAO()
 
@@ -35,18 +34,18 @@ class ClienteController:
 
     def salvar_cliente(self, nome: str, cpf: str, telefone: str, email: str):
         if not nome or not cpf or not telefone or not email:
-            return False, "Todos os campos sao obrigatorios."
+            return False, "Todos os campos são obrigatórios."
 
         try:
             existente = self.cliente_dao.buscar_por_cpf(cpf.strip())
             if existente:
-                return False, "Ja existe um cliente cadastrado com este CPF."
+                return False, "Já existe um cliente cadastrado com este CPF."
 
             cliente = Cliente(
-                nome     = nome.strip(),
-                cpf      = cpf.strip(),
+                nome = nome.strip(),
+                cpf = cpf.strip(),
                 telefone = telefone.strip(),
-                email    = email.strip()
+                email = email.strip()
             )
             return self.cliente_dao.salvar(cliente)
 
@@ -59,16 +58,16 @@ class ClienteController:
 
     def atualizar_cliente(self, id_cliente: int, nome: str, telefone: str, email: str):
         if not nome or not telefone or not email:
-            return False, "Todos os campos sao obrigatorios."
+            return False, "Todos os campos são obrigatórios."
 
         try:
             cliente = self.cliente_dao.buscar_por_id(id_cliente)
             if not cliente:
-                return False, "Cliente nao encontrado para edicao."
+                return False, "Cliente não encontrado para edição."
 
-            cliente.nome     = nome.strip()
+            cliente.nome = nome.strip()
             cliente.telefone = telefone.strip()
-            cliente.email    = email.strip()
+            cliente.email = email.strip()
 
             return self.cliente_dao.atualizar(cliente)
 
