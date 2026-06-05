@@ -58,7 +58,7 @@ class ClienteDAO(GenericDAO):
 
     def remover(self, id_cliente: int):
         if not self.conexao:
-            return False, "Nao foi possivel conectar ao banco de dados."
+            return False, "Não foi possível conectar ao banco de dados."
         cursor = None
         try:
             cursor = self.conexao.cursor()
@@ -67,7 +67,7 @@ class ClienteDAO(GenericDAO):
             )
             if cursor.rowcount == 0:
                 self.conexao.rollback()
-                return False, "Cliente nao encontrado para remocao."
+                return False, "Cliente não encontrado para remoção."
             self.conexao.commit()
             return True, "Cliente removido com sucesso!"
         except Exception as e:
@@ -79,7 +79,7 @@ class ClienteDAO(GenericDAO):
 
     def atualizar(self, cliente: Cliente):
         if not self.conexao:
-            return False, "Nao foi possivel conectar ao banco de dados."
+            return False, "Não foi possível conectar ao banco de dados."
         cursor = None
         try:
             cursor = self.conexao.cursor()
@@ -98,7 +98,7 @@ class ClienteDAO(GenericDAO):
             ))
             if cursor.rowcount == 0:
                 self.conexao.rollback()
-                return False, "Cliente nao encontrado para atualizacao."
+                return False, "Cliente não encontrado para atualização."
             self.conexao.commit()
             return True, "Cliente atualizado com sucesso!"
         except Exception as e:
@@ -149,7 +149,6 @@ class ClienteDAO(GenericDAO):
             if cursor:
                 cursor.close()
 
-    def _montar_cliente(self, linha) -> Cliente:
+    def _montar_cliente(self, linha):
         cli_id, nome, cpf, telefone, email = linha
-        return Cliente(nome=nome, cpf=cpf, telefone=telefone,
-                       email=email, id=cli_id)
+        return Cliente(nome=nome, cpf=cpf, telefone=telefone, email=email, id=cli_id)

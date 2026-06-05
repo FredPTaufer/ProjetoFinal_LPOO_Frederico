@@ -58,13 +58,6 @@ class AgendamentoController:
         try:
             data_hora = datetime.strptime(data_hora_str.strip(), "%d/%m/%Y %H:%M")
 
-            if self.agendamento_dao.verificar_conflito(id_profissional, data_hora):
-                return False, (
-                    f"O profissional já possui um agendamento em "
-                    f"{data_hora.strftime('%d/%m/%Y as %H:%M')}. "
-                    "Escolha outro horario."
-                )
-
             if data_hora < datetime.now():
                 return False, "A data e hora do agendamento devem ser futuras."
 
@@ -81,7 +74,18 @@ class AgendamentoController:
             if not profissional.disponivel:
                 return False, "Profissional não está disponível."
 
-            estrategia = _string_para_estrategia(estrategia_str)
+            if self.agendamento_dao.verificar_conflito(
+                    id_profissional, data_hora, servico.duracao):
+                fim = data_hora.replace(
+                    minute=data_hora.minute + servico.duracao
+                ) if False else None
+                return False, (
+                    f"O profissional ja possui um atendimento neste periodo.\n"
+                    f"O servico '{servico.nome}' dura {servico.duracao} minutos.\n"
+                    "Escolha outro horario."
+                )
+
+            estrategia  = _string_para_estrategia(estrategia_str)
             agendamento = Agendamento(
                 cliente      = cliente,
                 profissional = profissional,
@@ -109,14 +113,6 @@ class AgendamentoController:
             agendamento = self.agendamento_dao.buscar_por_id(id_agendamento)
             if not agendamento:
                 return False, "Agendamento nao encontrado para edicao."
-            
-            if self.agendamento_dao.verificar_conflito(
-                id_profissional, data_hora, ignorar_id=id_agendamento):
-                return False, (
-                    f"O profissional já possui um agendamento em "
-                    f"{data_hora.strftime('%d/%m/%Y as %H:%M')}. "
-                    "Escolha outro horario."
-                )
 
             cliente      = self.cliente_dao.buscar_por_id(id_cliente)
             profissional = self.profissional_dao.buscar_por_id(id_profissional)
@@ -128,6 +124,15 @@ class AgendamentoController:
                 return False, "Profissional nao encontrado."
             if not servico:
                 return False, "Servico nao encontrado."
+
+            if self.agendamento_dao.verificar_conflito(
+                    id_profissional, data_hora, servico.duracao,
+                    ignorar_id=id_agendamento):
+                return False, (
+                    f"O profissional ja possui um atendimento neste periodo.\n"
+                    f"O servico '{servico.nome}' dura {servico.duracao} minutos.\n"
+                    "Escolha outro horario."
+                )
 
             agendamento.cliente      = cliente
             agendamento.profissional = profissional

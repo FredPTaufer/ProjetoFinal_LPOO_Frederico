@@ -8,13 +8,12 @@ from model.Profissional import Profissional
 
 
 class ProfissionalDAO(GenericDAO):
-
     def __init__(self):
         self.conexao = DatabaseConfig.get_connection()
 
     def salvar(self, profissional: Profissional):
         if not self.conexao:
-            return False, "Nao foi possivel conectar ao banco de dados."
+            return False, "Não foi possível conectar ao banco de dados."
         cursor = None
         try:
             cursor = self.conexao.cursor()
@@ -60,7 +59,7 @@ class ProfissionalDAO(GenericDAO):
 
     def remover(self, id_profissional: int):
         if not self.conexao:
-            return False, "Nao foi possivel conectar ao banco de dados."
+            return False, "Não foi possível conectar ao banco de dados."
         cursor = None
         try:
             cursor = self.conexao.cursor()
@@ -70,7 +69,7 @@ class ProfissionalDAO(GenericDAO):
             )
             if cursor.rowcount == 0:
                 self.conexao.rollback()
-                return False, "Profissional nao encontrado para remocao."
+                return False, "Profissional não encontrado para remoção."
             self.conexao.commit()
             return True, "Profissional removido com sucesso!"
         except Exception as e:
@@ -82,7 +81,7 @@ class ProfissionalDAO(GenericDAO):
 
     def atualizar(self, profissional: Profissional):
         if not self.conexao:
-            return False, "Nao foi possivel conectar ao banco de dados."
+            return False, "Não foi possível conectar ao banco de dados."
         cursor = None
         try:
             cursor = self.conexao.cursor()
@@ -101,7 +100,7 @@ class ProfissionalDAO(GenericDAO):
             ))
             if cursor.rowcount == 0:
                 self.conexao.rollback()
-                return False, "Profissional nao encontrado para atualizacao."
+                return False, "Profissional não encontrado para atualização."
             self.conexao.commit()
             return True, "Profissional atualizado com sucesso!"
         except Exception as e:
@@ -152,9 +151,8 @@ class ProfissionalDAO(GenericDAO):
             if cursor:
                 cursor.close()
 
-    def _montar_profissional(self, linha) -> Profissional:
+    def _montar_profissional(self, linha):
         pro_id, nome, cpf, especialidade, disponivel = linha
-        p = Profissional(nome=nome, cpf=cpf,
-                         especialidade=especialidade, id=pro_id)
+        p = Profissional(nome=nome, cpf=cpf, especialidade=especialidade, id=pro_id)
         p.disponivel = disponivel
         return p

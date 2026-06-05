@@ -15,7 +15,7 @@ from model.PrecoPromocional import PrecoPromocional
 from model.PrecoFidelidade import PrecoFidelidade
 
 
-def _estrategia_para_string(estrategia) -> str:
+def _estrategia_para_string(estrategia):
     nome = type(estrategia).__name__.lower()
     if "promocional" in nome:
         return "promocional"
@@ -35,22 +35,21 @@ def _string_para_estrategia(valor: str):
 class AgendamentoDAO(GenericDAO):
 
     def __init__(self):
-        self.conexao  = DatabaseConfig.get_connection()
+        self.conexao = DatabaseConfig.get_connection()
         self._cli_dao = ClienteDAO()
         self._pro_dao = ProfissionalDAO()
         self._ser_dao = ServicoDAO()
 
     def salvar(self, agendamento: Agendamento):
-        # Valida se os objetos relacionados estão salvos no banco
         if not agendamento.cliente.id:
-            return False, "Cliente nao esta cadastrado no banco."
+            return False, "Cliente não está cadastrado no banco."
         if not agendamento.profissional.id:
-            return False, "Profissional nao esta cadastrado no banco."
+            return False, "Profissional não está cadastrado no banco."
         if not agendamento.servico.id:
-            return False, "Servico nao esta cadastrado no banco."
+            return False, "Serviço não está cadastrado no banco."
 
         if not self.conexao:
-            return False, "Nao foi possivel conectar ao banco de dados."
+            return False, "Não foi possível conectar ao banco de dados."
         cursor = None
         try:
             cursor = self.conexao.cursor()
@@ -98,10 +97,7 @@ class AgendamentoDAO(GenericDAO):
                     age_data_hora ASC
             """
             cursor.execute(query)
-            resultado = [
-                a for a in (self._montar_agendamento(l) for l in cursor.fetchall()) if a
-            ]
-            return resultado
+            return [a for a in (self._montar_agendamento(l) for l in cursor.fetchall()) if a]
         except Exception as e:
             print(f"Erro ao listar agendamentos: {e}")
             return []
@@ -111,7 +107,7 @@ class AgendamentoDAO(GenericDAO):
 
     def remover(self, id_agendamento: int):
         if not self.conexao:
-            return False, "Nao foi possivel conectar ao banco de dados."
+            return False, "Não foi possível conectar ao banco de dados."
         cursor = None
         try:
             cursor = self.conexao.cursor()
@@ -121,7 +117,7 @@ class AgendamentoDAO(GenericDAO):
             )
             if cursor.rowcount == 0:
                 self.conexao.rollback()
-                return False, "Agendamento nao encontrado para remocao."
+                return False, "Agendamento não encontrado para remoção."
             self.conexao.commit()
             return True, "Agendamento removido com sucesso!"
         except Exception as e:
@@ -133,14 +129,14 @@ class AgendamentoDAO(GenericDAO):
 
     def atualizar(self, agendamento: Agendamento):
         if not agendamento.cliente.id:
-            return False, "Cliente nao esta cadastrado no banco."
+            return False, "Cliente não está cadastrado no banco."
         if not agendamento.profissional.id:
-            return False, "Profissional nao esta cadastrado no banco."
+            return False, "Profissional não está cadastrado no banco."
         if not agendamento.servico.id:
-            return False, "Servico nao esta cadastrado no banco."
+            return False, "Serviço não está cadastrado no banco."
 
         if not self.conexao:
-            return False, "Nao foi possivel conectar ao banco de dados."
+            return False, "Não foi possível conectar ao banco de dados."
         cursor = None
         try:
             cursor = self.conexao.cursor()
@@ -165,7 +161,7 @@ class AgendamentoDAO(GenericDAO):
             ))
             if cursor.rowcount == 0:
                 self.conexao.rollback()
-                return False, "Agendamento nao encontrado para atualizacao."
+                return False, "Agendamento não encontrado para atualização."
             self.conexao.commit()
             return True, "Agendamento atualizado com sucesso!"
         except Exception as e:
@@ -226,7 +222,7 @@ class AgendamentoDAO(GenericDAO):
 
     def atualizar_status(self, id_agendamento: int, novo_status: StatusAgendamento):
         if not self.conexao:
-            return False, "Nao foi possivel conectar ao banco de dados."
+            return False, "Não foi possível conectar ao banco de dados."
         cursor = None
         try:
             cursor = self.conexao.cursor()
@@ -236,12 +232,42 @@ class AgendamentoDAO(GenericDAO):
             )
             if cursor.rowcount == 0:
                 self.conexao.rollback()
-                return False, "Agendamento nao encontrado."
+                return False, "Agendamento não encontrado."
             self.conexao.commit()
             return True, "Status atualizado com sucesso!"
         except Exception as e:
             self.conexao.rollback()
             return False, f"Erro ao atualizar status: {e}"
+        finally:
+            if cursor:
+                cursor.close()
+
+    def verificar_conflito(self, id_profissional: int, data_hora: datetime, duracao_novo: int, ignorar_id: int = None):
+        if not self.conexao:
+            return False
+        cursor = None
+        try:
+            cursor = self.conexao.cursor()
+            query = """
+                SELECT 1
+                FROM tb_agendamentos a
+                JOIN tb_servicos s ON s.ser_id = a.age_ser_id
+                WHERE a.age_pro_id = %s
+                AND   a.age_status != 'cancelado'
+                AND   a.age_data_hora < %s + (%s * interval '1 minute')
+                AND   a.age_data_hora + (s.ser_duracao * interval '1 minute') > %s
+            """
+            params = [id_profissional, data_hora, duracao_novo, data_hora]
+
+            if ignorar_id:
+                query += " AND a.age_id != %s"
+                params.append(ignorar_id)
+
+            cursor.execute(query, tuple(params))
+            return cursor.fetchone() is not None
+        except Exception as e:
+            print(f"Erro ao verificar conflito: {e}")
+            return False
         finally:
             if cursor:
                 cursor.close()
@@ -253,13 +279,12 @@ class AgendamentoDAO(GenericDAO):
         profissional = self._pro_dao.buscar_por_id(pro_id)
         servico      = self._ser_dao.buscar_por_id(ser_id)
 
-        # Se algum relacionamento foi removido do banco, ignora o agendamento
         if not cliente or not profissional or not servico:
             print(f"Aviso: agendamento #{age_id} com referencia invalida — ignorado.")
             return None
 
         estrategia = _string_para_estrategia(estrategia_str)
-        status     = StatusAgendamento(status_str)
+        status = StatusAgendamento(status_str)
 
         if isinstance(data_hora, str):
             data_hora = datetime.fromisoformat(data_hora)
@@ -273,34 +298,3 @@ class AgendamentoDAO(GenericDAO):
             status       = status,
             id           = age_id
         )
-        
-    def verificar_conflito(self, id_profissional: int, data_hora: datetime, ignorar_id: int = None) -> bool:
-        """
-        Retorna True se já existe agendamento ativo para o mesmo
-        profissional no mesmo horário.
-        """
-        if not self.conexao:
-            return False
-        cursor = None
-        try:
-            cursor = self.conexao.cursor()
-            query = """
-                SELECT 1 FROM tb_agendamentos
-                WHERE age_pro_id   = %s
-                AND   age_data_hora = %s
-                AND   age_status   != 'cancelado'
-            """
-            params = [id_profissional, data_hora]
-
-            if ignorar_id:
-                query += " AND age_id != %s"
-                params.append(ignorar_id)
-
-            cursor.execute(query, tuple(params))
-            return cursor.fetchone() is not None
-        except Exception as e:
-            print(f"Erro ao verificar conflito: {e}")
-            return False
-        finally:
-            if cursor:
-                cursor.close()

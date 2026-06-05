@@ -8,13 +8,12 @@ from model.ServiceFactory import ServiceFactory
 
 
 class ServicoDAO(GenericDAO):
-
     def __init__(self):
         self.conexao = DatabaseConfig.get_connection()
 
     def salvar(self, servico):
         if not self.conexao:
-            return False, "Nao foi possivel conectar ao banco de dados."
+            return False, "Não foi possível conectar ao banco de dados."
         cursor = None
         try:
             cursor = self.conexao.cursor()
@@ -31,10 +30,10 @@ class ServicoDAO(GenericDAO):
             ))
             servico.id = cursor.fetchone()[0]
             self.conexao.commit()
-            return True, "Servico cadastrado com sucesso!"
+            return True, "Serviço cadastrado com sucesso!"
         except Exception as e:
             self.conexao.rollback()
-            return False, f"Erro ao cadastrar servico: {e}"
+            return False, f"Erro ao cadastrar serviço: {e}"
         finally:
             if cursor:
                 cursor.close()
@@ -45,14 +44,13 @@ class ServicoDAO(GenericDAO):
         cursor = None
         try:
             cursor = self.conexao.cursor()
-            # ORDER BY ser_tipo para consistência — nome e duracao vêm da classe
             cursor.execute(
                 "SELECT ser_id, ser_tipo, ser_preco "
                 "FROM tb_servicos ORDER BY ser_tipo"
             )
             return [self._montar_servico(linha) for linha in cursor.fetchall()]
         except Exception as e:
-            print(f"Erro ao listar servicos: {e}")
+            print(f"Erro ao listar serviços: {e}")
             return []
         finally:
             if cursor:
@@ -60,7 +58,7 @@ class ServicoDAO(GenericDAO):
 
     def remover(self, id_servico: int):
         if not self.conexao:
-            return False, "Nao foi possivel conectar ao banco de dados."
+            return False, "Não foi possível conectar ao banco de dados."
         cursor = None
         try:
             cursor = self.conexao.cursor()
@@ -69,23 +67,22 @@ class ServicoDAO(GenericDAO):
             )
             if cursor.rowcount == 0:
                 self.conexao.rollback()
-                return False, "Servico nao encontrado para remocao."
+                return False, "Serviço não encontrado para remoção."
             self.conexao.commit()
-            return True, "Servico removido com sucesso!"
+            return True, "Serviço removido com sucesso!"
         except Exception as e:
             self.conexao.rollback()
-            return False, f"Erro ao remover servico: {e}"
+            return False, f"Erro ao remover serviço: {e}"
         finally:
             if cursor:
                 cursor.close()
 
     def atualizar(self, servico):
         if not self.conexao:
-            return False, "Nao foi possivel conectar ao banco de dados."
+            return False, "Não foi possível conectar ao banco de dados."
         cursor = None
         try:
             cursor = self.conexao.cursor()
-            # Apenas o preco é editável — nome e duracao são definidos pela classe
             query = """
                 UPDATE tb_servicos
                 SET ser_preco = %s
@@ -94,12 +91,12 @@ class ServicoDAO(GenericDAO):
             cursor.execute(query, (servico.preco, servico.id))
             if cursor.rowcount == 0:
                 self.conexao.rollback()
-                return False, "Servico nao encontrado para atualizacao."
+                return False, "Serviço não encontrado para atualização."
             self.conexao.commit()
-            return True, "Servico atualizado com sucesso!"
+            return True, "Serviço atualizado com sucesso!"
         except Exception as e:
             self.conexao.rollback()
-            return False, f"Erro ao atualizar servico: {e}"
+            return False, f"Erro ao atualizar serviço: {e}"
         finally:
             if cursor:
                 cursor.close()
@@ -118,7 +115,7 @@ class ServicoDAO(GenericDAO):
             linha = cursor.fetchone()
             return self._montar_servico(linha) if linha else None
         except Exception as e:
-            print(f"Erro ao buscar servico: {e}")
+            print(f"Erro ao buscar serviço: {e}")
             return None
         finally:
             if cursor:
@@ -138,7 +135,7 @@ class ServicoDAO(GenericDAO):
             linha = cursor.fetchone()
             return self._montar_servico(linha) if linha else None
         except Exception as e:
-            print(f"Erro ao buscar servico por tipo: {e}")
+            print(f"Erro ao buscar serviço por tipo: {e}")
             return None
         finally:
             if cursor:

@@ -29,8 +29,7 @@ class JanelaNovoAgendamento(tk.Toplevel):
         self._servicos      = []
         self._clientes      = []
 
-        tk.Label(self, text="Novo Agendamento",
-                 font=("Helvetica", 15, "bold")).pack(pady=10)
+        tk.Label(self, text="Novo Agendamento", font=("Helvetica", 15, "bold")).pack(pady=10)
 
         self.criar_widgets()
         self._carregar_combos()
@@ -39,27 +38,22 @@ class JanelaNovoAgendamento(tk.Toplevel):
         frame = tk.Frame(self, padx=20)
         frame.pack(fill="x")
 
-        # Cliente — somente se id_cliente nao foi passado
         tk.Label(frame, text="Cliente:").grid(row=0, column=0, sticky="w", pady=5)
         self.cb_cliente = ttk.Combobox(frame, state="readonly", width=30)
         self.cb_cliente.grid(row=0, column=1, pady=5, sticky="ew")
 
-        # Servico
-        tk.Label(frame, text="Servico:").grid(row=1, column=0, sticky="w", pady=5)
+        tk.Label(frame, text="Serviço:").grid(row=1, column=0, sticky="w", pady=5)
         self.cb_servico = ttk.Combobox(frame, state="readonly", width=30)
         self.cb_servico.grid(row=1, column=1, pady=5, sticky="ew")
 
-        # Profissional
         tk.Label(frame, text="Profissional:").grid(row=2, column=0, sticky="w", pady=5)
         self.cb_profissional = ttk.Combobox(frame, state="readonly", width=30)
         self.cb_profissional.grid(row=2, column=1, pady=5, sticky="ew")
 
-        # Data
         tk.Label(frame, text="Data:").grid(row=3, column=0, sticky="w", pady=5)
         self.cal_data = DateEntry(frame, width=20, date_pattern="dd/mm/yyyy")
         self.cal_data.grid(row=3, column=1, pady=5, sticky="w")
 
-        # Hora
         tk.Label(frame, text="Hora (HH:MM):").grid(row=4, column=0, sticky="w", pady=5)
         self.txt_hora = tk.Entry(frame, width=10)
         self.txt_hora.insert(0, "09:00")
@@ -67,13 +61,10 @@ class JanelaNovoAgendamento(tk.Toplevel):
 
         frame.columnconfigure(1, weight=1)
 
-        # Botoes
         frame_botoes = tk.Frame(self)
         frame_botoes.pack(fill="x", padx=20, pady=15)
-        tk.Button(frame_botoes, text="Confirmar", width=12,
-                  command=self.solicitar_agendamento).pack(side="left", padx=5)
-        tk.Button(frame_botoes, text="Fechar", width=10,
-                  command=self.destroy).pack(side="right", padx=5)
+        tk.Button(frame_botoes, text="Confirmar", width=12, command=self.solicitar_agendamento).pack(side="left", padx=5)
+        tk.Button(frame_botoes, text="Fechar", width=10, command=self.destroy).pack(side="right", padx=5)
 
     def _carregar_combos(self):
         self._clientes = self.cli_controller.listar_clientes()
@@ -99,14 +90,14 @@ class JanelaNovoAgendamento(tk.Toplevel):
             messagebox.showwarning("Aviso", "Selecione um profissional.", parent=self)
             return
         if self.cb_servico.current() == -1:
-            messagebox.showwarning("Aviso", "Selecione um servico.", parent=self)
+            messagebox.showwarning("Aviso", "Selecione um serviço.", parent=self)
             return
 
-        cliente      = self._clientes[self.cb_cliente.current()]
+        cliente = self._clientes[self.cb_cliente.current()]
         profissional = self._profissionais[self.cb_profissional.current()]
-        servico      = self._servicos[self.cb_servico.current()]
-        data         = self.cal_data.get_date().strftime("%d/%m/%Y")
-        hora         = self.txt_hora.get().strip()
+        servico = self._servicos[self.cb_servico.current()]
+        data = self.cal_data.get_date().strftime("%d/%m/%Y")
+        hora = self.txt_hora.get().strip()
 
         sucesso, msg = self.controller.criar_agendamento(
             id_cliente      = cliente.id,
