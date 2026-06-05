@@ -1,17 +1,17 @@
 from .CorteMasculino import CorteMasculino
-from .CorteFeminino  import CorteFeminino
-from .Barba           import Barba
-from .PintarCabelo   import PintarCabelo
-from .Sobrancelha     import Sobrancelha
+from .CorteFeminino import CorteFeminino
+from .Barba import Barba
+from .PintarCabelo import PintarCabelo
+from .Sobrancelha import Sobrancelha
 
 
 class ServiceFactory:
     _tipos = {
         "cortemasculino" : CorteMasculino,
-        "cortefeminino"  : CorteFeminino,
-        "barba"          : Barba,
-        "pintarcabelo"   : PintarCabelo,
-        "sobrancelha"    : Sobrancelha,
+        "cortefeminino" : CorteFeminino,
+        "barba" : Barba,
+        "pintarcabelo" : PintarCabelo,
+        "sobrancelha" : Sobrancelha,
     }
 
     @staticmethod
@@ -19,8 +19,8 @@ class ServiceFactory:
         chave = tipo.strip().lower().replace(" ", "")
         if chave not in ServiceFactory._tipos:
             raise ValueError(
-                f"Tipo de servico invalido: '{tipo}'. "
-                f"Opcoes: {list(ServiceFactory._tipos.keys())}"
+                f"Tipo de serviço inválido: '{tipo}'. "
+                f"Opções: {list(ServiceFactory._tipos.keys())}"
             )
         classe = ServiceFactory._tipos[chave]
         if preco is not None:

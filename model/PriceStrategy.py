@@ -4,5 +4,5 @@ from .Service import Service
 
 class PriceStrategy(ABC):
     @abstractmethod
-    def calcular(self, servico: Service) -> float:
+    def calcular(self, servico: Service):
         pass

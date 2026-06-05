@@ -11,21 +11,21 @@ from .ExcecoesPersonalizadas import DataHoraInvalidaError
 class Agendamento:
     def __init__(
         self,
-        cliente      : Cliente,
+        cliente : Cliente,
         profissional : Profissional,
-        servico      : Service,
-        data_hora    : datetime,
-        estrategia   : PriceStrategy = None,
-        status       : StatusAgendamento = StatusAgendamento.AGENDADO,
-        id           : int = None
+        servico : Service,
+        data_hora : datetime,
+        estrategia : PriceStrategy = None,
+        status : StatusAgendamento = StatusAgendamento.AGENDADO,
+        id : int = None
     ):
-        self.cliente      = cliente
+        self.cliente = cliente
         self.profissional = profissional
-        self.servico      = servico
-        self.data_hora    = data_hora
-        self.estrategia   = estrategia if estrategia else PrecoNormal()
-        self.status       = status
-        self.id           = id
+        self.servico = servico
+        self.data_hora = data_hora
+        self.estrategia = estrategia if estrategia else PrecoNormal()
+        self.status = status
+        self.id = id
 
     @property
     def cliente(self):
@@ -34,7 +34,7 @@ class Agendamento:
     @cliente.setter
     def cliente(self, valor):
         if valor is None:
-            raise ValueError("Cliente nao pode ser None.")
+            raise ValueError("Cliente não pode ser None.")
         self.__cliente = valor
 
     @property
@@ -44,7 +44,7 @@ class Agendamento:
     @profissional.setter
     def profissional(self, valor):
         if valor is None:
-            raise ValueError("Profissional nao pode ser None.")
+            raise ValueError("Profissional não pode ser None.")
         self.__profissional = valor
 
     @property
@@ -54,7 +54,7 @@ class Agendamento:
     @servico.setter
     def servico(self, valor):
         if valor is None:
-            raise ValueError("Servico nao pode ser None.")
+            raise ValueError("Serviço não pode ser None.")
         self.__servico = valor
 
     @property
@@ -74,7 +74,7 @@ class Agendamento:
     @status.setter
     def status(self, valor):
         if not isinstance(valor, StatusAgendamento):
-            raise ValueError("Status deve ser um StatusAgendamento valido.")
+            raise ValueError("Status deve ser um StatusAgendamento válido.")
         self.__status = valor
 
     @property
@@ -85,7 +85,7 @@ class Agendamento:
     def id(self, valor):
         self.__id = valor
 
-    def calcularValor(self) -> float:
+    def calcularValor(self):
         return self.estrategia.calcular(self.servico)
 
     def __str__(self):

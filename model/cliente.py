@@ -5,8 +5,8 @@ class Cliente(Pessoa):
     def __init__(self, nome: str, cpf: str, telefone: str, email: str, id: int = None):
         super().__init__(nome, cpf)
         self.telefone = telefone
-        self.email    = email
-        self.id       = id
+        self.email = email
+        self.id = id
         self.__historico = []
 
     @property
@@ -16,7 +16,7 @@ class Cliente(Pessoa):
     @telefone.setter
     def telefone(self, valor):
         if not valor or not valor.strip():
-            raise ValueError("Telefone nao pode ser vazio.")
+            raise ValueError("Telefone não pode ser vazio.")
         self.__telefone = valor.strip()
 
     @property
@@ -26,7 +26,7 @@ class Cliente(Pessoa):
     @email.setter
     def email(self, valor):
         if not valor or not valor.strip():
-            raise ValueError("Email nao pode ser vazio.")
+            raise ValueError("Email não pode ser vazio.")
         self.__email = valor.strip()
 
     @property
@@ -48,5 +48,4 @@ class Cliente(Pessoa):
         return list(self.__historico)
 
     def __str__(self):
-        return (f"Cliente: {self.nome} | CPF: {self.cpf} "
-                f"| Tel: {self.telefone} | Email: {self.email}")
+        return (f"Cliente: {self.nome} | CPF: {self.cpf} | Tel: {self.telefone} | Email: {self.email}")

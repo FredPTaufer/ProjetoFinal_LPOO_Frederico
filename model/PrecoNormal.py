@@ -3,5 +3,5 @@ from .Service import Service
 
 
 class PrecoNormal(PriceStrategy):
-    def calcular(self, servico: Service) -> float:
+    def calcular(self, servico: Service):
         return servico.preco

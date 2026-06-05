@@ -5,7 +5,7 @@ from .ExcecoesPersonalizadas import CpfInvalidoError
 class Pessoa(ABC):
     def __init__(self, nome: str, cpf: str):
         self.nome = nome
-        self.cpf  = cpf
+        self.cpf = cpf
 
     @property
     def nome(self):
@@ -14,7 +14,7 @@ class Pessoa(ABC):
     @nome.setter
     def nome(self, valor):
         if not valor or not valor.strip():
-            raise ValueError("Nome nao pode ser vazio.")
+            raise ValueError("Nome não pode ser vazio.")
         self.__nome = valor.strip()
 
     @property
@@ -25,7 +25,7 @@ class Pessoa(ABC):
     def cpf(self, valor):
         cpf_limpo = valor.strip().replace(".", "").replace("-", "")
         if not cpf_limpo.isdigit() or len(cpf_limpo) != 11:
-            raise CpfInvalidoError("CPF invalido: deve conter exatamente 11 digitos numericos.")
+            raise CpfInvalidoError("CPF inválido: deve conter exatamente 11 dígitos numéricos.")
         self.__cpf = cpf_limpo
 
     def __str__(self):

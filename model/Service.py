@@ -4,10 +4,10 @@ from .ExcecoesPersonalizadas import PrecoInvalidoError, DuracaoInvalidaError
 
 class Service(ABC):
     def __init__(self, nome: str, duracao: int, preco: float, id: int = None):
-        self.nome    = nome
+        self.nome = nome
         self.duracao = duracao
-        self.preco   = preco
-        self.id      = id
+        self.preco = preco
+        self.id = id
 
     @property
     def nome(self):
@@ -16,7 +16,7 @@ class Service(ABC):
     @nome.setter
     def nome(self, valor):
         if not valor or not valor.strip():
-            raise ValueError("Nome do servico nao pode ser vazio.")
+            raise ValueError("Nome do serviço não pode ser vazio.")
         self.__nome = valor.strip()
 
     @property
@@ -26,7 +26,7 @@ class Service(ABC):
     @duracao.setter
     def duracao(self, valor):
         if valor <= 0:
-            raise DuracaoInvalidaError("Duracao deve ser maior que zero.")
+            raise DuracaoInvalidaError("Duração deve ser maior que zero.")
         self.__duracao = valor
 
     @property
@@ -36,7 +36,7 @@ class Service(ABC):
     @preco.setter
     def preco(self, valor):
         if valor <= 0:
-            raise PrecoInvalidoError("Preco deve ser maior que zero.")
+            raise PrecoInvalidoError("Preço deve ser maior que zero.")
         self.__preco = valor
 
     @property
@@ -48,5 +48,4 @@ class Service(ABC):
         self.__id = valor
 
     def __str__(self):
-        return (f"{self.__class__.__name__}: {self.nome} "
-                f"| Duracao: {self.duracao} min | Preco: R$ {self.preco:.2f}")
+        return (f"{self.__class__.__name__}: {self.nome} | Duração: {self.duracao} min | Preço: R$ {self.preco:.2f}")
