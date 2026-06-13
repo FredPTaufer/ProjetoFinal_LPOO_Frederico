@@ -13,7 +13,7 @@ from views.JanelaSobre import JanelaSobre
 class JanelaPrincipalAdmin(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("Salao de Beleza - Administrador")
+        self.title("Salão de Beleza - Administrador")
         self.geometry("420x240")
         self.resizable(False, False)
 
@@ -27,34 +27,29 @@ class JanelaPrincipalAdmin(tk.Tk):
         # Menu Cadastro
         menu_cadastro = tk.Menu(barra_menu, tearoff=0)
         barra_menu.add_cascade(label="Cadastro", menu=menu_cadastro)
-        menu_cadastro.add_command(label="Clientes",      command=self._abrir_clientes)
+        menu_cadastro.add_command(label="Clientes", command=self._abrir_clientes)
         menu_cadastro.add_command(label="Profissionais", command=self._abrir_profissionais)
-        menu_cadastro.add_command(label="Servicos",      command=self._abrir_servicos)
+        menu_cadastro.add_command(label="Serviços", command=self._abrir_servicos)
 
         # Menu Agendamentos
         menu_agenda = tk.Menu(barra_menu, tearoff=0)
         barra_menu.add_cascade(label="Agendamentos", menu=menu_agenda)
-        menu_agenda.add_command(label="Gerenciar Agendamentos",
-                                command=self._abrir_agendamentos)
+        menu_agenda.add_command(label="Gerenciar Agendamentos", command=self._abrir_agendamentos)
 
         # Menu Sistema
         menu_sistema = tk.Menu(barra_menu, tearoff=0)
         barra_menu.add_cascade(label="Sistema", menu=menu_sistema)
         menu_sistema.add_command(label="Sobre", command=self._abrir_sobre)
         menu_sistema.add_separator()
-        menu_sistema.add_command(label="Sair",  command=self._sair)
+        menu_sistema.add_command(label="Sair", command=self._sair)
 
     def _criar_tela_inicial(self):
-        tk.Label(self, text="Painel do Administrador",
-                 font=("Helvetica", 16, "bold")).pack(pady=(30, 5))
-        tk.Label(self, text="Perfil: Administrador",
-                 font=("Helvetica", 10), fg="#4a90d9").pack(pady=2)
+        tk.Label(self, text="Painel do Administrador", font=("Arial", 16, "bold")).pack(pady=(30, 5))
+        tk.Label(self, text="Perfil: Administrador", font=("Arial", 10), fg="#4a90d9").pack(pady=2)
         tk.Frame(self, height=1, bg="lightgray").pack(fill="x", padx=20, pady=12)
-        tk.Label(self,
-                 text="Cadastro: Clientes / Profissionais / Servicos\n"
+        tk.Label(self, text="Cadastro: Clientes / Profissionais / Serviços\n"
                       "Agendamentos: Gerenciar Agendamentos\n"
-                      "Sistema: Sobre | Sair",
-                 font=("Helvetica", 9), fg="gray", justify="center").pack()
+                      "Sistema: Sobre | Sair", font=("Arial", 9), fg="gray", justify="center").pack()
 
     def _abrir_clientes(self):
         janela = JanelaListagemClientes(self)
@@ -77,7 +72,7 @@ class JanelaPrincipalAdmin(tk.Tk):
         self.wait_window(janela)
 
     def _sair(self):
-        from views.JanelaEscolhaPerfil import JanelaEscolhaPerfil  # import aqui dentro
+        from views.JanelaEscolhaPerfil import JanelaEscolhaPerfil
         self.destroy()
         app = JanelaEscolhaPerfil()
         app.mainloop()

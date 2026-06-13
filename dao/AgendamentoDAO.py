@@ -275,9 +275,9 @@ class AgendamentoDAO(GenericDAO):
     def _montar_agendamento(self, linha):
         age_id, cli_id, pro_id, ser_id, data_hora, status_str, estrategia_str = linha
 
-        cliente      = self._cli_dao.buscar_por_id(cli_id)
+        cliente = self._cli_dao.buscar_por_id(cli_id)
         profissional = self._pro_dao.buscar_por_id(pro_id)
-        servico      = self._ser_dao.buscar_por_id(ser_id)
+        servico = self._ser_dao.buscar_por_id(ser_id)
 
         if not cliente or not profissional or not servico:
             print(f"Aviso: agendamento #{age_id} com referencia invalida — ignorado.")
@@ -290,11 +290,11 @@ class AgendamentoDAO(GenericDAO):
             data_hora = datetime.fromisoformat(data_hora)
 
         return Agendamento(
-            cliente      = cliente,
+            cliente = cliente,
             profissional = profissional,
-            servico      = servico,
-            data_hora    = data_hora,
-            estrategia   = estrategia,
-            status       = status,
-            id           = age_id
+            servico = servico,
+            data_hora = data_hora,
+            estrategia = estrategia,
+            status = status,
+            id = age_id
         )

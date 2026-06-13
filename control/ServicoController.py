@@ -39,7 +39,7 @@ class ServicoController:
 
             existente = self.servico_dao.buscar_por_tipo(tipo.strip().lower())
             if existente:
-                return False, f"Já existe um servico do tipo '{tipo}' cadastrado."
+                return False, f"Já existe um serviço do tipo '{tipo}' cadastrado."
 
             servico = ServiceFactory.criar(tipo=tipo.strip(), preco=preco)
             return self.servico_dao.salvar(servico)

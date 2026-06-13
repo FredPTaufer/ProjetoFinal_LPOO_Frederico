@@ -13,7 +13,7 @@ class JanelaListagemAgendamentos(tk.Toplevel):
     def __init__(self, master=None):
         super().__init__(master)
         self.title("Agendamentos - Admin")
-        self.geometry("860x430")
+        self.geometry("820x420")
 
         self.controller = AgendamentoController()
 
@@ -21,8 +21,7 @@ class JanelaListagemAgendamentos(tk.Toplevel):
         self.carregar_dados()
 
     def criar_widgets(self):
-        tk.Label(self, text="Gerenciamento de Agendamentos",
-                 font=("Helvetica", 16, "bold")).pack(pady=10)
+        tk.Label(self, text="Gerenciamento de Agendamentos", font=("Arial", 16, "bold")).pack(pady=10)
 
         frame_tree = tk.Frame(self)
         frame_tree.pack(expand=True, fill="both", padx=20, pady=5)
@@ -30,11 +29,9 @@ class JanelaListagemAgendamentos(tk.Toplevel):
         scrollbar = ttk.Scrollbar(frame_tree)
         scrollbar.pack(side="right", fill="y")
 
-        colunas = ("ID", "Cliente", "Profissional", "Servico", "Data/Hora", "Status", "Valor")
-        self.tree = ttk.Treeview(frame_tree, columns=colunas,
-                                  show="headings", yscrollcommand=scrollbar.set)
-        larguras = {"ID": 35, "Cliente": 140, "Profissional": 140,
-                    "Servico": 120, "Data/Hora": 120, "Status": 80, "Valor": 80}
+        colunas = ("Cliente", "Profissional", "Serviço", "Data/Hora", "Status", "Valor")
+        self.tree = ttk.Treeview(frame_tree, columns=colunas, show="headings", yscrollcommand=scrollbar.set)
+        larguras = {"Cliente": 140, "Profissional": 140, "Serviço": 120, "Data/Hora": 120, "Status": 80, "Valor": 90}
         for col in colunas:
             self.tree.heading(col, text=col)
             self.tree.column(col, anchor="center", width=larguras[col])
@@ -44,28 +41,19 @@ class JanelaListagemAgendamentos(tk.Toplevel):
 
         frame_botoes = tk.Frame(self)
         frame_botoes.pack(fill="x", padx=20, pady=5)
-
-        tk.Button(frame_botoes, text="Novo",         width=10,
-                  command=self.abrir_novo).pack(side="left", padx=5)
-        tk.Button(frame_botoes, text="Editar",       width=10,
-                  command=self.abrir_editar).pack(side="left", padx=5)
-        tk.Button(frame_botoes, text="Ver Detalhes", width=12,
-                  command=self.ver_detalhes).pack(side="left", padx=5)
-        tk.Button(frame_botoes, text="Concluir",     width=10,
-                  command=self.concluir).pack(side="left", padx=5)
-        tk.Button(frame_botoes, text="Cancelar",     width=10,
-                  command=self.cancelar).pack(side="left", padx=5)
-        tk.Button(frame_botoes, text="Remover",      width=10,
-                  command=self.remover).pack(side="left", padx=5)
-        tk.Button(frame_botoes, text="Fechar",       width=10,
-                  command=self.destroy).pack(side="right", padx=5)
+        tk.Button(frame_botoes, text="Novo", width=10, command=self.abrir_novo).pack(side="left", padx=5)
+        tk.Button(frame_botoes, text="Editar", width=10, command=self.abrir_editar).pack(side="left", padx=5)
+        tk.Button(frame_botoes, text="Ver Detalhes", width=12, command=self.ver_detalhes).pack(side="left", padx=5)
+        tk.Button(frame_botoes, text="Concluir", width=10, command=self.concluir).pack(side="left", padx=5)
+        tk.Button(frame_botoes, text="Cancelar", width=10, command=self.cancelar).pack(side="left", padx=5)
+        tk.Button(frame_botoes, text="Remover", width=10, command=self.remover).pack(side="left", padx=5)
+        tk.Button(frame_botoes, text="Fechar", width=10, command=self.destroy).pack(side="right", padx=5)
 
     def carregar_dados(self):
         for row in self.tree.get_children():
             self.tree.delete(row)
         for a in self.controller.listar_agendamentos():
             self.tree.insert("", "end", iid=str(a.id), values=(
-                a.id,
                 a.cliente.nome,
                 a.profissional.nome,
                 a.servico.nome,
@@ -75,11 +63,11 @@ class JanelaListagemAgendamentos(tk.Toplevel):
             ))
 
     def _id_selecionado(self):
-        selecionado = self.tree.selection()
-        if not selecionado:
+        sel = self.tree.selection()
+        if not sel:
             messagebox.showwarning("Aviso", "Selecione um agendamento.", parent=self)
             return None
-        return int(self.tree.item(selecionado[0])["values"][0])
+        return int(sel[0])
 
     def abrir_novo(self):
         janela = JanelaCadastroAgendamento(self)
@@ -92,7 +80,7 @@ class JanelaListagemAgendamentos(tk.Toplevel):
             return
         agendamento = self.controller.buscar_por_id(id_age)
         if not agendamento:
-            messagebox.showerror("Erro", "Agendamento nao encontrado.", parent=self)
+            messagebox.showerror("Erro", "Agendamento não encontrado.", parent=self)
             return
         
         janela = JanelaCadastroAgendamento(self, agendamento=agendamento)
@@ -105,16 +93,16 @@ class JanelaListagemAgendamentos(tk.Toplevel):
             return
         a = self.controller.buscar_por_id(id_age)
         if not a:
-            messagebox.showerror("Erro", "Agendamento nao encontrado.", parent=self)
+            messagebox.showerror("Erro", "Agendamento não encontrado.", parent=self)
             return
         msg = (
-            f"ID:            {a.id}\n"
             f"Cliente:       {a.cliente.nome}\n"
             f"Profissional:  {a.profissional.nome}\n"
-            f"Servico:       {a.servico.nome}\n"
+            f"Serviço:       {a.servico.nome}\n"
+            f"Duração:       {a.servico.duracao} minutos\n"
             f"Data/Hora:     {a.data_hora.strftime('%d/%m/%Y %H:%M')}\n"
             f"Status:        {a.status.value.capitalize()}\n"
-            f"Estrategia:    {type(a.estrategia).__name__}\n"
+            f"Estratégia:    {type(a.estrategia).__name__}\n"
             f"Valor:         R$ {a.calcularValor():.2f}"
         )
         messagebox.showinfo("Detalhes do Agendamento", msg, parent=self)

@@ -7,10 +7,10 @@ from tkinter import ttk, messagebox
 from tkcalendar import DateEntry
 from datetime import datetime
 
-from control.AgendamentoController import AgendamentoController
-from control.ClienteController import ClienteController
-from control.ProfissionalController import ProfissionalController
-from control.ServicoController import ServicoController
+from control.agendamento_controller import AgendamentoController
+from control.cliente_controller import ClienteController
+from control.profissional_controller import ProfissionalController
+from control.servico_controller import ServicoController
 
 
 class JanelaCadastroAgendamento(tk.Toplevel):
@@ -21,17 +21,18 @@ class JanelaCadastroAgendamento(tk.Toplevel):
         self.geometry("460x560")
         self.resizable(False, False)
 
-        self.controller = AgendamentoController()
+        self.controller     = AgendamentoController()
         self.cli_controller = ClienteController()
         self.pro_controller = ProfissionalController()
         self.ser_controller = ServicoController()
 
-        self._clientes = []
+        self._clientes      = []
         self._profissionais = []
-        self._servicos = []
-        self._slots = []
+        self._servicos      = []
+        self._slots         = []
 
-        tk.Label(self, text="Editar Agendamento" if agendamento else "Novo Agendamento", font=("Arial", 15, "bold")).pack(pady=10)
+        tk.Label(self, text="Editar Agendamento" if agendamento else "Novo Agendamento",
+                 font=("Arial", 15, "bold")).pack(pady=10)
 
         self.criar_widgets()
         self._carregar_clientes_servicos()
@@ -43,15 +44,18 @@ class JanelaCadastroAgendamento(tk.Toplevel):
         frame = tk.Frame(self, padx=20)
         frame.pack(fill="x")
 
+        # Cliente
         tk.Label(frame, text="Cliente:").grid(row=0, column=0, sticky="w", pady=4)
         self.cb_cliente = ttk.Combobox(frame, state="readonly", width=32)
         self.cb_cliente.grid(row=0, column=1, pady=4, sticky="ew")
 
-        tk.Label(frame, text="Serviço:").grid(row=1, column=0, sticky="w", pady=4)
+        # Servico
+        tk.Label(frame, text="Servico:").grid(row=1, column=0, sticky="w", pady=4)
         self.cb_servico = ttk.Combobox(frame, state="readonly", width=32)
         self.cb_servico.grid(row=1, column=1, pady=4, sticky="ew")
         self.cb_servico.bind("<<ComboboxSelected>>", self._ao_selecionar_servico)
 
+        # Profissional
         tk.Label(frame, text="Profissional:").grid(row=2, column=0, sticky="w", pady=4)
         self.cb_profissional = ttk.Combobox(frame, state="readonly", width=32)
         self.cb_profissional.grid(row=2, column=1, pady=4, sticky="ew")
@@ -60,31 +64,42 @@ class JanelaCadastroAgendamento(tk.Toplevel):
         self.lbl_aviso_pro = tk.Label(frame, text="", fg="gray", font=("Arial", 8))
         self.lbl_aviso_pro.grid(row=3, column=1, sticky="w")
 
+        # Data
         tk.Label(frame, text="Data:").grid(row=4, column=0, sticky="w", pady=4)
         self.cal_data = DateEntry(frame, width=20, date_pattern="dd/mm/yyyy")
         self.cal_data.grid(row=4, column=1, pady=4, sticky="w")
         self.cal_data.bind("<<DateEntrySelected>>", self._ao_selecionar_data)
 
-        tk.Label(frame, text="Horário:").grid(row=5, column=0, sticky="nw", pady=4)
+        # Horarios disponíveis
+        tk.Label(frame, text="Horario:").grid(row=5, column=0, sticky="nw", pady=4)
 
         frame_slots = tk.Frame(frame)
         frame_slots.grid(row=5, column=1, pady=4, sticky="ew")
         scrollbar = ttk.Scrollbar(frame_slots, orient="vertical")
-        self.lb_slots = tk.Listbox(frame_slots, height=5, width=32, yscrollcommand=scrollbar.set, selectmode="single", exportselection=False)
+        self.lb_slots = tk.Listbox(frame_slots, height=5, width=32,
+                                    yscrollcommand=scrollbar.set,
+                                    selectmode="single", exportselection=False)
         scrollbar.config(command=self.lb_slots.yview)
         self.lb_slots.pack(side="left", fill="x", expand=True)
         scrollbar.pack(side="right", fill="y")
 
-        self.lbl_aviso_slot = tk.Label(frame, text="Selecione serviço e profissional.", fg="gray", font=("Arial", 8))
+        self.lbl_aviso_slot = tk.Label(frame, text="Selecione servico e profissional.",
+                                        fg="gray", font=("Arial", 8))
         self.lbl_aviso_slot.grid(row=6, column=1, sticky="w")
 
-        tk.Label(frame, text="Estratégia:").grid(row=7, column=0, sticky="w", pady=4)
-        self.cb_estrategia = ttk.Combobox(frame, values=["normal", "promocional", "fidelidade"], state="readonly", width=20)
+        # Estrategia
+        tk.Label(frame, text="Estrategia:").grid(row=7, column=0, sticky="w", pady=4)
+        self.cb_estrategia = ttk.Combobox(
+            frame, values=["normal", "promocional", "fidelidade"],
+            state="readonly", width=20)
         self.cb_estrategia.current(0)
         self.cb_estrategia.grid(row=7, column=1, pady=4, sticky="w")
 
+        # Status
         tk.Label(frame, text="Status:").grid(row=8, column=0, sticky="w", pady=4)
-        self.cb_status = ttk.Combobox(frame, values=["agendado", "concluido", "cancelado"], state="readonly", width=20)
+        self.cb_status = ttk.Combobox(
+            frame, values=["agendado", "concluido", "cancelado"],
+            state="readonly", width=20)
         self.cb_status.current(0)
         self.cb_status.grid(row=8, column=1, pady=4, sticky="w")
 
@@ -92,14 +107,18 @@ class JanelaCadastroAgendamento(tk.Toplevel):
 
         frame_botoes = tk.Frame(self)
         frame_botoes.pack(fill="x", padx=20, pady=10)
-        btn_text = "Atualizar" if self.agendamento else "Salvar"
+        btn_text   = "Atualizar" if self.agendamento else "Salvar"
         btn_action = self.solicitar_atualizacao if self.agendamento else self.solicitar_cadastro
-        tk.Button(frame_botoes, text=btn_text, width=12, command=btn_action).pack(side="left", padx=5)
-        tk.Button(frame_botoes, text="Fechar", width=10, command=self.destroy).pack(side="right", padx=5)
+        tk.Button(frame_botoes, text=btn_text, width=12,
+                  command=btn_action).pack(side="left", padx=5)
+        tk.Button(frame_botoes, text="Fechar", width=10,
+                  command=self.destroy).pack(side="right", padx=5)
 
     def _carregar_clientes_servicos(self):
         self._clientes = self.cli_controller.listar_clientes()
-        self.cb_cliente["values"] = [f"{c.nome} ({c.cpf})" for c in self._clientes]
+        self.cb_cliente["values"] = [
+            f"{c.nome} ({c.cpf})" for c in self._clientes
+        ]
         self._servicos = self.ser_controller.listar_servicos()
         self.cb_servico["values"] = [s.nome for s in self._servicos]
 
@@ -137,20 +156,22 @@ class JanelaCadastroAgendamento(tk.Toplevel):
             return
 
         profissional = self._profissionais[idx_pro]
-        servico = self._servicos[idx_ser]
-        data_str = self.cal_data.get_date().strftime("%d/%m/%Y")
+        servico      = self._servicos[idx_ser]
+        data_str     = self.cal_data.get_date().strftime("%d/%m/%Y")
 
         self.lb_slots.delete(0, tk.END)
-        self._slots = self.controller.horarios_disponiveis(profissional.id, servico.id, data_str)
+        self._slots = self.controller.horarios_disponiveis(
+            profissional.id, servico.id, data_str
+        )
 
         if not self._slots:
             self.lbl_aviso_slot.config(
-                text="Nenhum horário disponível nesta data. Tente outro dia.")
+                text="Nenhum horario disponivel nesta data. Tente outro dia.")
         else:
             for slot in self._slots:
                 self.lb_slots.insert(tk.END, slot.strftime("%H:%M"))
             self.lbl_aviso_slot.config(
-                text=f"{len(self._slots)} horário(s) disponível(is).")
+                text=f"{len(self._slots)} horario(s) disponivel(is).")
 
     def _slot_selecionado(self):
         sel = self.lb_slots.curselection()
@@ -175,6 +196,7 @@ class JanelaCadastroAgendamento(tk.Toplevel):
                 break
         self.cal_data.set_date(a.data_hora.date())
         self._carregar_horarios()
+        # Tenta selecionar o horario atual na listbox
         hora_atual = a.data_hora.strftime("%H:%M")
         for i in range(self.lb_slots.size()):
             if self.lb_slots.get(i) == hora_atual:
@@ -192,16 +214,15 @@ class JanelaCadastroAgendamento(tk.Toplevel):
             return
         slot = self._slot_selecionado()
         if not slot:
-            messagebox.showwarning("Aviso", "Selecione um horário disponível.", parent=self)
+            messagebox.showwarning("Aviso", "Selecione um horario disponivel.", parent=self)
             return
 
-        cliente = self._clientes[self.cb_cliente.current()]
+        cliente      = self._clientes[self.cb_cliente.current()]
         profissional = self._profissionais[self.cb_profissional.current()]
-        servico = self._servicos[self.cb_servico.current()]
+        servico      = self._servicos[self.cb_servico.current()]
 
         sucesso, msg = self.controller.criar_agendamento(
-            id_cliente=cliente.id, 
-            id_profissional=profissional.id,
+            id_cliente=cliente.id, id_profissional=profissional.id,
             id_servico=servico.id,
             data_hora_str=slot.strftime("%d/%m/%Y %H:%M"),
             estrategia_str=self.cb_estrategia.get()
@@ -219,18 +240,16 @@ class JanelaCadastroAgendamento(tk.Toplevel):
             return
         slot = self._slot_selecionado()
         if not slot:
-            messagebox.showwarning("Aviso", "Selecione um horário disponível.", parent=self)
+            messagebox.showwarning("Aviso", "Selecione um horario disponivel.", parent=self)
             return
 
-        cliente = self._clientes[self.cb_cliente.current()]
+        cliente      = self._clientes[self.cb_cliente.current()]
         profissional = self._profissionais[self.cb_profissional.current()]
-        servico = self._servicos[self.cb_servico.current()]
+        servico      = self._servicos[self.cb_servico.current()]
 
         sucesso, msg = self.controller.atualizar_agendamento(
-            id_agendamento=self.agendamento.id, 
-            id_cliente=cliente.id,
-            id_profissional=profissional.id, 
-            id_servico=servico.id,
+            id_agendamento=self.agendamento.id, id_cliente=cliente.id,
+            id_profissional=profissional.id, id_servico=servico.id,
             data_hora_str=slot.strftime("%d/%m/%Y %H:%M"),
             estrategia_str=self.cb_estrategia.get(),
             status_str=self.cb_status.get()

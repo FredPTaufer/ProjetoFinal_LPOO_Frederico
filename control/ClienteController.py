@@ -3,6 +3,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from dao.ClienteDAO import ClienteDAO
+from dao.ProfissionalDAO import ProfissionalDAO
 from model.Cliente import Cliente
 from model.ExcecoesPersonalizadas import CpfInvalidoError
 
@@ -10,6 +11,7 @@ from model.ExcecoesPersonalizadas import CpfInvalidoError
 class ClienteController:
     def __init__(self):
         self.cliente_dao = ClienteDAO()
+        self.profissional_dao = ProfissionalDAO()
 
     def listar_clientes(self):
         try:
@@ -37,13 +39,20 @@ class ClienteController:
             return False, "Todos os campos são obrigatórios."
 
         try:
-            existente = self.cliente_dao.buscar_por_cpf(cpf.strip())
-            if existente:
+            cpf_limpo = cpf.strip().replace(".", "").replace("-", "")
+
+            # Verifica duplicidade entre clientes
+            if self.cliente_dao.buscar_por_cpf(cpf_limpo):
                 return False, "Já existe um cliente cadastrado com este CPF."
+
+            # Verifica se o CPF pertence a um profissional
+            todos_pro = self.profissional_dao.listar_todos()
+            if any(p.cpf == cpf_limpo for p in todos_pro):
+                return False, "Este CPF já está cadastrado como Profissional."
 
             cliente = Cliente(
                 nome = nome.strip(),
-                cpf = cpf.strip(),
+                cpf = cpf_limpo,
                 telefone = telefone.strip(),
                 email = email.strip()
             )

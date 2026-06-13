@@ -13,7 +13,7 @@ class ClienteDAO(GenericDAO):
 
     def salvar(self, cliente: Cliente):
         if not self.conexao:
-            return False, "Nao foi possivel conectar ao banco de dados."
+            return False, "Não foi possível conectar ao banco de dados."
         cursor = None
         try:
             cursor = self.conexao.cursor()

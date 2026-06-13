@@ -46,5 +46,5 @@ class Profissional(Pessoa):
         return any(type(s).__name__ == type(servico).__name__ for s in self.__servicos)
 
     def __str__(self):
-        status = "Disponivel" if self.disponivel else "Indisponivel"
+        status = "Disponível" if self.disponivel else "Indisponível"
         return (f"Profissional: {self.nome} | CPF: {self.cpf} | Especialidade: {self.especialidade} | Status: {status}")
