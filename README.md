@@ -62,7 +62,7 @@ Instale e inicie o PostgreSQL. As configurações de conexão padrão do projeto
 |Senha  |postgres              |
 |Banco  |lpoo_projeto_Frederico|
 
-Para alterar essas configurações, edite o arquivo `dao/DBConfig.py`.
+Para alterar essas configurações, edite o arquivo dao/DBConfig.py.
 
 -----
 
@@ -78,7 +78,7 @@ CREATE DATABASE lpoo_projeto_Frederico;
 
 ### Passo 2 — Criar as tabelas
 
-Conecte-se ao banco criado e execute o arquivo `sql/CriarBanco.sql`, ou cole o SQL abaixo:
+Conecte-se ao banco criado e execute o arquivo sql/CriarBanco.sql, ou cole o SQL abaixo:
 
 ```sql
 -- Clientes
@@ -135,7 +135,7 @@ CREATE TABLE IF NOT EXISTS tb_agendamentos (
 
 ### Passo 3 — Popular os serviços
 
-Execute o arquivo `sql/PreencherServicos.sql`, ou cole o SQL abaixo:
+Execute o arquivo sql/PreencherServicos.sql, ou cole o SQL abaixo:
 
 ```sql
 INSERT INTO tb_servicos (ser_nome, ser_tipo, ser_duracao, ser_preco)
@@ -236,7 +236,7 @@ ProjetoFinal_LPOO_Frederico/
 
 ## Diagrama de Classes
 
-> `![Diagrama de Classes](docs/DiagramaDeClasses.png)`
+![Diagrama de Classes](docs/DiagramaDeClasses.png)
 
 -----
 
