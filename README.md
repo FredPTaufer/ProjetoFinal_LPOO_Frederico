@@ -200,7 +200,7 @@ ProjetoFinal_LPOO_Frederico/
 │   ├── CorteMasculino.py                # Serviço concreto do tipo Corte Masculino
 │   ├── ExcecoesPersonalizadas.py        # Exceções específicas da aplicação
 │   ├── Pessoa.py                        # Classe abstrata base para Cliente e Profissional
-│   ├── PintarCabelo.py                   # Serviço concreto do tipo Pintura de Cabelo
+│   ├── PintarCabelo.py                  # Serviço concreto do tipo Pintura de Cabelo
 │   ├── PrecoFidelidade.py               # Strategy de cálculo com desconto fidelidade
 │   ├── PrecoNormal.py                   # Strategy de cálculo com preço padrão
 │   ├── PrecoPromocional.py              # Strategy de cálculo com desconto promocional
