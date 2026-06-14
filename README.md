@@ -189,6 +189,7 @@ ProjetoFinal_LPOO_Frederico/
 │   └── ServicoDAO.py                    # Persistência e consultas de serviços
 │
 ├── docs/
+│   ├── ArquivoDrawio.drawio             # Arquivo de edição Drawio
 │   └── DiagramaDeClasses.png            # Diagrama UML de classes do sistema
 │
 ├── model/
