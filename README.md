@@ -175,22 +175,22 @@ ProjetoFinal_LPOO_Frederico/
 ├── README.md                            
 │
 ├── control/
-│   ├── AgendamentoController.py         # Regras de negócio dos agendamentos
-│   ├── ClienteController.py             # Regras de negócio dos clientes
-│   ├── ProfissionalController.py        # Regras de negócio dos profissionais
-│   └── ServicoController.py             # Regras de negócio dos serviços
+│   ├── AgendamentoController.py         # Regras de negócio dos Agendamentos
+│   ├── ClienteController.py             # Regras de negócio dos Clientes
+│   ├── ProfissionalController.py        # Regras de negócio dos Profissionais
+│   └── ServicoController.py             # Regras de negócio dos Serviços
 │
 ├── dao/
-│   ├── AgendamentoDAO.py                # Persistência e consultas de agendamentos
-│   ├── ClienteDAO.py                    # Persistência e consultas de clientes
+│   ├── AgendamentoDAO.py                # Persistência e consultas de Agendamentos
+│   ├── ClienteDAO.py                    # Persistência e consultas de Clientes
 │   ├── DBConfig.py                      # Configuração e conexão com PostgreSQL
-│   ├── GenericoDAO.py                   # Classe base com operações CRUD genéricas
-│   ├── ProfissionalDAO.py               # Persistência e consultas de profissionais
-│   └── ServicoDAO.py                    # Persistência e consultas de serviços
+│   ├── GenericoDAO.py                   # Classe abstrata com operações CRUD genéricas
+│   ├── ProfissionalDAO.py               # Persistência e consultas de Profissionais
+│   └── ServicoDAO.py                    # Persistência e consultas de Serviços
 │
 ├── docs/
 │   ├── ArquivoDrawio.drawio             # Arquivo de edição Drawio
-│   └── DiagramaDeClasses.png            # Diagrama UML de classes do sistema
+│   └── DiagramaDeClasses.png            # Diagrama de classes do sistema
 │
 ├── model/
 │   ├── Agendamento.py                   # Entidade de domínio Agendamento
@@ -198,39 +198,39 @@ ProjetoFinal_LPOO_Frederico/
 │   ├── Cliente.py                       # Entidade de domínio Cliente
 │   ├── CorteFeminino.py                 # Serviço concreto do tipo Corte Feminino
 │   ├── CorteMasculino.py                # Serviço concreto do tipo Corte Masculino
-│   ├── ExcecoesPersonalizadas.py        # Exceções específicas da aplicação
-│   ├── Pessoa.py                        # Classe abstrata base para Cliente e Profissional
+│   ├── ExcecoesPersonalizadas.py        # Exceções específicas
+│   ├── Pessoa.py                        # Classe abstrata para Cliente e Profissional
 │   ├── PintarCabelo.py                  # Serviço concreto do tipo Pintura de Cabelo
 │   ├── PrecoFidelidade.py               # Strategy de cálculo com desconto fidelidade
 │   ├── PrecoNormal.py                   # Strategy de cálculo com preço padrão
 │   ├── PrecoPromocional.py              # Strategy de cálculo com desconto promocional
 │   ├── PriceStrategy.py                 # Interface abstrata do padrão Strategy
 │   ├── Profissional.py                  # Entidade de domínio Profissional
-│   ├── Service.py                       # Classe abstrata para serviços oferecidos
-│   ├── ServiceFactory.py                # Factory Method para criação de serviços
+│   ├── Service.py                       # Classe abstrata para Serviços
+│   ├── ServiceFactory.py                # Factory Method para criação de Serviços
 │   ├── Sobrancelha.py                   # Serviço concreto do tipo Sobrancelha
-│   └── StatusAgendamento.py             # Enum com os estados do agendamento
+│   └── StatusAgendamento.py             # Enum com os estados do Agendamento
 │
 ├── sql/
 │   ├── CriaBanco.sql                    # Script de criação das tabelas do banco
-│   └── PreencherServicos.sql            # Script de carga inicial dos serviços
+│   └── PreencherServicos.sql            # Script de inserção dos Serviços
 │
 └── views/
-    ├── JanelaCadastroAgendamento.py     # Tela de cadastro de agendamentos (Admin)
-    ├── JanelaCadastroCliente.py         # Tela de cadastro de clientes
-    ├── JanelaCadastroProfissional.py    # Tela de cadastro de profissionais
+    ├── JanelaCadastroAgendamento.py     # Tela de cadastro de Agendamentos (Admin)
+    ├── JanelaCadastroCliente.py         # Tela de cadastro de Clientes
+    ├── JanelaCadastroProfissional.py    # Tela de cadastro de Profissionais
     ├── JanelaEscolhaPerfil.py           # Tela inicial para escolha de perfil
     ├── JanelaHistoricoCliente.py        # Tela de histórico de atendimentos do cliente
-    ├── JanelaListagemAgendamentos.py    # Tela de listagem de agendamentos
-    ├── JanelaListagemClientes.py        # Tela de listagem de clientes
-    ├── JanelaListagemProfissionais.py   # Tela de listagem de profissionais
-    ├── JanelaListagemServicos.py        # Tela de listagem e gerenciamento de serviços
+    ├── JanelaListagemAgendamentos.py    # Tela de listagem de Agendamentos
+    ├── JanelaListagemClientes.py        # Tela de listagem de Clientes
+    ├── JanelaListagemProfissionais.py   # Tela de listagem de Profissionais
+    ├── JanelaListagemServicos.py        # Tela de listagem e gerenciamento de Serviços
     ├── JanelaLoginCliente.py            # Tela de autenticação do cliente via CPF
-    ├── JanelaMeusAgendamentos.py        # Tela dos agendamentos do cliente logado
+    ├── JanelaMeusAgendamentos.py        # Tela dos Agendamentos do cliente logado
     ├── JanelaNovoAgendamento.py         # Tela para novo agendamento do cliente
-    ├── JanelaPrincipalAdmin.py          # Menu principal do administrador
-    ├── JanelaPrincipalCliente.py        # Menu principal do cliente
-    └── JanelaSobre.py                   # Tela com informações do sistema e autores
+    ├── JanelaPrincipalAdmin.py          # Menu principal do Administrador
+    ├── JanelaPrincipalCliente.py        # Menu principal do Cliente
+    └── JanelaSobre.py                   # Tela com informações do sistema e autor
 ```
 
 -----
@@ -255,6 +255,6 @@ ProjetoFinal_LPOO_Frederico/
 ## Declaração de Uso de IA
 
 - [x] **Utilizei IA** como ferramenta de apoio.
-- **Ferramenta:** Claude Sonnet 4.6 (Anthropic)
+- **Ferramenta:** Claude Sonnet 4.6
 - **Finalidade:** Apoio no planejamento e estruturação do projeto, definição da divisão das views e organização das responsabilidades seguindo o padrão MVC, auxílio na formatação e organização do código. Também foi utilizada para auxiliar na criação dos scripts SQL de criação e população do banco de dados, na identificação e correção de erros durante o desenvolvimento e na elaboração deste README.
 - **Validação:** Todo o código gerado foi lido, compreendido e testado. As decisões de estrutura, arquitetura e padrões de projeto foram tomadas com base no conteúdo das aulas.
