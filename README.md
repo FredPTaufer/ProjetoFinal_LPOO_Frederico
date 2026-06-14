@@ -70,7 +70,7 @@ Para alterar essas configurações, edite o arquivo [dao/DBConfig.py](dao/DBConf
 
 ### Passo 1 — Criar o banco de dados
 
-No pgAdmin ou psql, execute:
+No pgAdmin, execute:
 
 ```sql
 CREATE DATABASE lpoo_projeto_Frederico;
