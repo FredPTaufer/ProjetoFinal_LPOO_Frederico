@@ -246,7 +246,7 @@ ProjetoFinal_LPOO_Frederico/
 |------------|-------------------------|----------------------------------------------------------------------------------------------------------------------------------------|
 |**DAO**     |`dao/`                   |Camada de persistência com operações CRUD para cada entidade.                                                                           |
 |**Factory** |`model/ServiceFactory.py`|Centraliza a criação dos 5 tipos de serviço a partir de uma string, usado pelo DAO ao reconstruir objetos do banco                      |
-|**Strategy**|`model/PriceStrategy.py` |Permite trocar o algoritmo de cálculo de preço (`PrecoNormal`, `PrecoPromocional`, `PrecoFidelidade`) sem alterar a classe `Agendamento`|
+|**Strategy**|`model/PriceStrategy.py` |Permite trocar o algoritmo de cálculo de preço (`PrecoNormal`, `PrecoPromocional`, `PrecoFidelidade`)                                   |
 |**MVC**     |Estrutura geral          |Separação clara entre Model (domínio), View (Tkinter) e Controller (regras de negócio)                                                  |
 
 -----
