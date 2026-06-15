@@ -51,7 +51,7 @@ class AgendamentoController:
             print(f"Erro ao buscar agendamentos do cliente: {e}")
             return []
 
-    def horarios_disponiveis(self, id_profissional: int, id_servico: int, data_str: str):
+    def horarios_disponiveis(self, id_profissional: int, id_servico: int, data_str: str, id_agendamento: int = None):
         try:
             data_obj = datetime.strptime(data_str.strip(), "%d/%m/%Y").date()
             servico = self.servico_dao.buscar_por_id(id_servico)
@@ -70,7 +70,7 @@ class AgendamentoController:
 
                 while slot + timedelta(minutes=duracao) <= fim_dt:
                     if slot > agora:
-                        conflito = self.agendamento_dao.verificar_conflito(id_profissional, slot, duracao)
+                        conflito = self.agendamento_dao.verificar_conflito(id_profissional, slot, duracao, ignorar_id=id_agendamento)
                         if not conflito:
                             slots.append(slot)
                     slot += timedelta(minutes=duracao)

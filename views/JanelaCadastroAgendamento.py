@@ -141,7 +141,7 @@ class JanelaCadastroAgendamento(tk.Toplevel):
         data_str = self.cal_data.get_date().strftime("%d/%m/%Y")
 
         self.lb_slots.delete(0, tk.END)
-        self._slots = self.controller.horarios_disponiveis(profissional.id, servico.id, data_str)
+        self._slots = self.controller.horarios_disponiveis(profissional.id, servico.id, data_str, id_agendamento=self.agendamento.id if self.agendamento else None)
 
         if not self._slots:
             self.lbl_aviso_slot.config(

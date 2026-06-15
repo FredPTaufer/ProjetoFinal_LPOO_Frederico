@@ -9,14 +9,15 @@ from model.ServiceFactory import ServiceFactory
 
 class ServicoDAO(GenericDAO):
     def __init__(self):
-        self.conexao = DatabaseConfig.get_connection()
+        pass
 
     def salvar(self, servico):
-        if not self.conexao:
+        conexao = DatabaseConfig.get_connection()
+        if not conexao:
             return False, "Não foi possível conectar ao banco de dados."
         cursor = None
         try:
-            cursor = self.conexao.cursor()
+            cursor = conexao.cursor()
             query = """
                 INSERT INTO tb_servicos (ser_nome, ser_tipo, ser_duracao, ser_preco)
                 VALUES (%s, %s, %s, %s)
@@ -29,21 +30,24 @@ class ServicoDAO(GenericDAO):
                 servico.preco
             ))
             servico.id = cursor.fetchone()[0]
-            self.conexao.commit()
+            conexao.commit()
             return True, "Serviço cadastrado com sucesso!"
         except Exception as e:
-            self.conexao.rollback()
+            conexao.rollback()
             return False, f"Erro ao cadastrar serviço: {e}"
         finally:
             if cursor:
                 cursor.close()
+            if conexao:
+                conexao.close()
 
     def listar_todos(self):
-        if not self.conexao:
+        conexao = DatabaseConfig.get_connection()
+        if not conexao:
             return []
         cursor = None
         try:
-            cursor = self.conexao.cursor()
+            cursor = conexao.cursor()
             cursor.execute(
                 "SELECT ser_id, ser_tipo, ser_preco "
                 "FROM tb_servicos ORDER BY ser_tipo"
@@ -55,34 +59,40 @@ class ServicoDAO(GenericDAO):
         finally:
             if cursor:
                 cursor.close()
+            if conexao:
+                conexao.close()
 
     def remover(self, id_servico: int):
-        if not self.conexao:
+        conexao = DatabaseConfig.get_connection()
+        if not conexao:
             return False, "Não foi possível conectar ao banco de dados."
         cursor = None
         try:
-            cursor = self.conexao.cursor()
+            cursor = conexao.cursor()
             cursor.execute(
                 "DELETE FROM tb_servicos WHERE ser_id = %s", (id_servico,)
             )
             if cursor.rowcount == 0:
-                self.conexao.rollback()
+                conexao.rollback()
                 return False, "Serviço não encontrado para remoção."
-            self.conexao.commit()
+            conexao.commit()
             return True, "Serviço removido com sucesso!"
         except Exception as e:
-            self.conexao.rollback()
+            conexao.rollback()
             return False, f"Erro ao remover serviço: {e}"
         finally:
             if cursor:
                 cursor.close()
+            if conexao:
+                conexao.close()
 
     def atualizar(self, servico):
-        if not self.conexao:
+        conexao = DatabaseConfig.get_connection()
+        if not conexao:
             return False, "Não foi possível conectar ao banco de dados."
         cursor = None
         try:
-            cursor = self.conexao.cursor()
+            cursor = conexao.cursor()
             query = """
                 UPDATE tb_servicos
                 SET ser_preco = %s
@@ -90,26 +100,28 @@ class ServicoDAO(GenericDAO):
             """
             cursor.execute(query, (servico.preco, servico.id))
             if cursor.rowcount == 0:
-                self.conexao.rollback()
+                conexao.rollback()
                 return False, "Serviço não encontrado para atualização."
-            self.conexao.commit()
+            conexao.commit()
             return True, "Serviço atualizado com sucesso!"
         except Exception as e:
-            self.conexao.rollback()
+            conexao.rollback()
             return False, f"Erro ao atualizar serviço: {e}"
         finally:
             if cursor:
                 cursor.close()
+            if conexao:
+                conexao.close()
 
     def buscar_por_id(self, id_servico: int):
-        if not self.conexao:
+        conexao = DatabaseConfig.get_connection()
+        if not conexao:
             return None
         cursor = None
         try:
-            cursor = self.conexao.cursor()
+            cursor = conexao.cursor()
             cursor.execute(
-                "SELECT ser_id, ser_tipo, ser_preco "
-                "FROM tb_servicos WHERE ser_id = %s",
+                "SELECT ser_id, ser_tipo, ser_preco FROM tb_servicos WHERE ser_id = %s",
                 (id_servico,)
             )
             linha = cursor.fetchone()
@@ -120,13 +132,16 @@ class ServicoDAO(GenericDAO):
         finally:
             if cursor:
                 cursor.close()
+            if conexao:
+                conexao.close()
 
     def buscar_por_tipo(self, tipo: str):
-        if not self.conexao:
+        conexao = DatabaseConfig.get_connection()
+        if not conexao:
             return None
         cursor = None
         try:
-            cursor = self.conexao.cursor()
+            cursor = conexao.cursor()
             cursor.execute(
                 "SELECT ser_id, ser_tipo, ser_preco "
                 "FROM tb_servicos WHERE ser_tipo = %s",
@@ -140,6 +155,8 @@ class ServicoDAO(GenericDAO):
         finally:
             if cursor:
                 cursor.close()
+            if conexao:
+                conexao.close()
 
     def _montar_servico(self, linha):
         ser_id, tipo, preco = linha

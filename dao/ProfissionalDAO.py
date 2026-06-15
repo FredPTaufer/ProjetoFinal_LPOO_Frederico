@@ -9,14 +9,15 @@ from model.Profissional import Profissional
 
 class ProfissionalDAO(GenericDAO):
     def __init__(self):
-        self.conexao = DatabaseConfig.get_connection()
+        pass
 
     def salvar(self, profissional: Profissional):
-        if not self.conexao:
+        conexao = DatabaseConfig.get_connection()
+        if not conexao:
             return False, "Não foi possível conectar ao banco de dados."
         cursor = None
         try:
-            cursor = self.conexao.cursor()
+            cursor = conexao.cursor()
             query = """
                 INSERT INTO tb_profissionais
                     (pro_nome, pro_cpf, pro_especialidade)
@@ -29,21 +30,24 @@ class ProfissionalDAO(GenericDAO):
                 profissional.especialidade
             ))
             profissional.id = cursor.fetchone()[0]
-            self.conexao.commit()
+            conexao.commit()
             return True, "Profissional cadastrado com sucesso!"
         except Exception as e:
-            self.conexao.rollback()
+            conexao.rollback()
             return False, f"Erro ao cadastrar profissional: {e}"
         finally:
             if cursor:
                 cursor.close()
+            if conexao:
+                conexao.close()
 
     def listar_todos(self):
-        if not self.conexao:
+        conexao = DatabaseConfig.get_connection()
+        if not conexao:
             return []
         cursor = None
         try:
-            cursor = self.conexao.cursor()
+            cursor = conexao.cursor()
             cursor.execute(
                 "SELECT pro_id, pro_nome, pro_cpf, pro_especialidade "
                 "FROM tb_profissionais ORDER BY pro_nome"
@@ -55,35 +59,41 @@ class ProfissionalDAO(GenericDAO):
         finally:
             if cursor:
                 cursor.close()
+            if conexao:
+                conexao.close()
 
     def remover(self, id_profissional: int):
-        if not self.conexao:
+        conexao = DatabaseConfig.get_connection()
+        if not conexao:
             return False, "Não foi possível conectar ao banco de dados."
         cursor = None
         try:
-            cursor = self.conexao.cursor()
+            cursor = conexao.cursor()
             cursor.execute(
                 "DELETE FROM tb_profissionais WHERE pro_id = %s",
                 (id_profissional,)
             )
             if cursor.rowcount == 0:
-                self.conexao.rollback()
+                conexao.rollback()
                 return False, "Profissional não encontrado para remoção."
-            self.conexao.commit()
+            conexao.commit()
             return True, "Profissional removido com sucesso!"
         except Exception as e:
-            self.conexao.rollback()
+            conexao.rollback()
             return False, f"Erro ao remover profissional: {e}"
         finally:
             if cursor:
                 cursor.close()
+            if conexao:
+                conexao.close()
 
     def atualizar(self, profissional: Profissional):
-        if not self.conexao:
+        conexao = DatabaseConfig.get_connection()
+        if not conexao:
             return False, "Não foi possível conectar ao banco de dados."
         cursor = None
         try:
-            cursor = self.conexao.cursor()
+            cursor = conexao.cursor()
             query = """
                 UPDATE tb_profissionais
                 SET pro_nome          = %s,
@@ -96,23 +106,26 @@ class ProfissionalDAO(GenericDAO):
                 profissional.id
             ))
             if cursor.rowcount == 0:
-                self.conexao.rollback()
+                conexao.rollback()
                 return False, "Profissional não encontrado para atualização."
-            self.conexao.commit()
+            conexao.commit()
             return True, "Profissional atualizado com sucesso!"
         except Exception as e:
-            self.conexao.rollback()
+            conexao.rollback()
             return False, f"Erro ao atualizar profissional: {e}"
         finally:
             if cursor:
                 cursor.close()
+            if conexao:
+                conexao.close()
 
     def buscar_por_id(self, id_profissional: int):
-        if not self.conexao:
+        conexao = DatabaseConfig.get_connection()
+        if not conexao:
             return None
         cursor = None
         try:
-            cursor = self.conexao.cursor()
+            cursor = conexao.cursor()
             cursor.execute(
                 "SELECT pro_id, pro_nome, pro_cpf, pro_especialidade "
                 "FROM tb_profissionais WHERE pro_id = %s",
@@ -126,13 +139,16 @@ class ProfissionalDAO(GenericDAO):
         finally:
             if cursor:
                 cursor.close()
+            if conexao:
+                conexao.close()
 
     def buscar_por_tipo(self, especialidade: str):
-        if not self.conexao:
+        conexao = DatabaseConfig.get_connection()
+        if not conexao:
             return []
         cursor = None
         try:
-            cursor = self.conexao.cursor()
+            cursor = conexao.cursor()
             cursor.execute(
                 "SELECT pro_id, pro_nome, pro_cpf, pro_especialidade "
                 "FROM tb_profissionais "
@@ -147,6 +163,8 @@ class ProfissionalDAO(GenericDAO):
         finally:
             if cursor:
                 cursor.close()
+            if conexao:
+                conexao.close()
 
     def _montar_profissional(self, linha):
         pro_id, nome, cpf, especialidade = linha

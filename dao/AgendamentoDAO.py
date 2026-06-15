@@ -35,7 +35,6 @@ def _string_para_estrategia(valor: str):
 class AgendamentoDAO(GenericDAO):
 
     def __init__(self):
-        self.conexao = DatabaseConfig.get_connection()
         self._cli_dao = ClienteDAO()
         self._pro_dao = ProfissionalDAO()
         self._ser_dao = ServicoDAO()
@@ -48,11 +47,12 @@ class AgendamentoDAO(GenericDAO):
         if not agendamento.servico.id:
             return False, "Serviço não está cadastrado no banco."
 
-        if not self.conexao:
+        conexao = DatabaseConfig.get_connection()
+        if not conexao:
             return False, "Não foi possível conectar ao banco de dados."
         cursor = None
         try:
-            cursor = self.conexao.cursor()
+            cursor = conexao.cursor()
             query = """
                 INSERT INTO tb_agendamentos
                     (age_cli_id, age_pro_id, age_ser_id,
@@ -69,21 +69,24 @@ class AgendamentoDAO(GenericDAO):
                 _estrategia_para_string(agendamento.estrategia)
             ))
             agendamento.id = cursor.fetchone()[0]
-            self.conexao.commit()
+            conexao.commit()
             return True, "Agendamento cadastrado com sucesso!"
         except Exception as e:
-            self.conexao.rollback()
+            conexao.rollback()
             return False, f"Erro ao cadastrar agendamento: {e}"
         finally:
             if cursor:
                 cursor.close()
+            if conexao:
+                conexao.close()
 
     def listar_todos(self):
-        if not self.conexao:
+        conexao = DatabaseConfig.get_connection()
+        if not conexao:
             return []
         cursor = None
         try:
-            cursor = self.conexao.cursor()
+            cursor = conexao.cursor()
             query = """
                 SELECT age_id, age_cli_id, age_pro_id, age_ser_id,
                        age_data_hora, age_status, age_estrategia
@@ -104,28 +107,33 @@ class AgendamentoDAO(GenericDAO):
         finally:
             if cursor:
                 cursor.close()
+            if conexao:
+                conexao.close()
 
     def remover(self, id_agendamento: int):
-        if not self.conexao:
+        conexao = DatabaseConfig.get_connection()
+        if not conexao:
             return False, "Não foi possível conectar ao banco de dados."
         cursor = None
         try:
-            cursor = self.conexao.cursor()
+            cursor = conexao.cursor()
             cursor.execute(
                 "DELETE FROM tb_agendamentos WHERE age_id = %s",
                 (id_agendamento,)
             )
             if cursor.rowcount == 0:
-                self.conexao.rollback()
+                conexao.rollback()
                 return False, "Agendamento não encontrado para remoção."
-            self.conexao.commit()
+            conexao.commit()
             return True, "Agendamento removido com sucesso!"
         except Exception as e:
-            self.conexao.rollback()
+            conexao.rollback()
             return False, f"Erro ao remover agendamento: {e}"
         finally:
             if cursor:
                 cursor.close()
+            if conexao:
+                conexao.close()
 
     def atualizar(self, agendamento: Agendamento):
         if not agendamento.cliente.id:
@@ -135,11 +143,12 @@ class AgendamentoDAO(GenericDAO):
         if not agendamento.servico.id:
             return False, "Serviço não está cadastrado no banco."
 
-        if not self.conexao:
+        conexao = DatabaseConfig.get_connection()
+        if not conexao:
             return False, "Não foi possível conectar ao banco de dados."
         cursor = None
         try:
-            cursor = self.conexao.cursor()
+            cursor = conexao.cursor()
             query = """
                 UPDATE tb_agendamentos
                 SET age_cli_id     = %s,
@@ -160,23 +169,26 @@ class AgendamentoDAO(GenericDAO):
                 agendamento.id
             ))
             if cursor.rowcount == 0:
-                self.conexao.rollback()
+                conexao.rollback()
                 return False, "Agendamento não encontrado para atualização."
-            self.conexao.commit()
+            conexao.commit()
             return True, "Agendamento atualizado com sucesso!"
         except Exception as e:
-            self.conexao.rollback()
+            conexao.rollback()
             return False, f"Erro ao atualizar agendamento: {e}"
         finally:
             if cursor:
                 cursor.close()
+            if conexao:
+                conexao.close()
 
     def buscar_por_id(self, id_agendamento: int):
-        if not self.conexao:
+        conexao = DatabaseConfig.get_connection()
+        if not conexao:
             return None
         cursor = None
         try:
-            cursor = self.conexao.cursor()
+            cursor = conexao.cursor()
             cursor.execute(
                 """
                 SELECT age_id, age_cli_id, age_pro_id, age_ser_id,
@@ -193,13 +205,16 @@ class AgendamentoDAO(GenericDAO):
         finally:
             if cursor:
                 cursor.close()
+            if conexao:
+                conexao.close()
 
     def buscar_por_cliente(self, id_cliente: int):
-        if not self.conexao:
+        conexao = DatabaseConfig.get_connection()
+        if not conexao:
             return []
         cursor = None
         try:
-            cursor = self.conexao.cursor()
+            cursor = conexao.cursor()
             cursor.execute(
                 """
                 SELECT age_id, age_cli_id, age_pro_id, age_ser_id,
@@ -219,35 +234,41 @@ class AgendamentoDAO(GenericDAO):
         finally:
             if cursor:
                 cursor.close()
+            if conexao:
+                conexao.close()
 
     def atualizar_status(self, id_agendamento: int, novo_status: StatusAgendamento):
-        if not self.conexao:
+        conexao = DatabaseConfig.get_connection()
+        if not conexao:
             return False, "Não foi possível conectar ao banco de dados."
         cursor = None
         try:
-            cursor = self.conexao.cursor()
+            cursor = conexao.cursor()
             cursor.execute(
                 "UPDATE tb_agendamentos SET age_status = %s WHERE age_id = %s",
                 (novo_status.value, id_agendamento)
             )
             if cursor.rowcount == 0:
-                self.conexao.rollback()
+                conexao.rollback()
                 return False, "Agendamento não encontrado."
-            self.conexao.commit()
+            conexao.commit()
             return True, "Status atualizado com sucesso!"
         except Exception as e:
-            self.conexao.rollback()
+            conexao.rollback()
             return False, f"Erro ao atualizar status: {e}"
         finally:
             if cursor:
                 cursor.close()
+            if conexao:
+                conexao.close()
 
     def verificar_conflito(self, id_profissional: int, data_hora: datetime, duracao_novo: int, ignorar_id: int = None):
-        if not self.conexao:
+        conexao = DatabaseConfig.get_connection()
+        if not conexao:
             return False
         cursor = None
         try:
-            cursor = self.conexao.cursor()
+            cursor = conexao.cursor()
             query = """
                 SELECT 1
                 FROM tb_agendamentos a
@@ -271,6 +292,8 @@ class AgendamentoDAO(GenericDAO):
         finally:
             if cursor:
                 cursor.close()
+            if conexao:
+                conexao.close()
 
     def _montar_agendamento(self, linha):
         age_id, cli_id, pro_id, ser_id, data_hora, status_str, estrategia_str = linha

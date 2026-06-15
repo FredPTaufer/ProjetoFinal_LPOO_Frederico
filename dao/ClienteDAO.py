@@ -9,14 +9,15 @@ from model.Cliente import Cliente
 
 class ClienteDAO(GenericDAO):
     def __init__(self):
-        self.conexao = DatabaseConfig.get_connection()
+        pass
 
     def salvar(self, cliente: Cliente):
-        if not self.conexao:
+        conexao = DatabaseConfig.get_connection()
+        if not conexao:
             return False, "Não foi possível conectar ao banco de dados."
         cursor = None
         try:
-            cursor = self.conexao.cursor()
+            cursor = conexao.cursor()
             query = """
                 INSERT INTO tb_clientes (cli_nome, cli_cpf, cli_telefone, cli_email)
                 VALUES (%s, %s, %s, %s)
@@ -29,21 +30,24 @@ class ClienteDAO(GenericDAO):
                 cliente.email
             ))
             cliente.id = cursor.fetchone()[0]
-            self.conexao.commit()
+            conexao.commit()
             return True, "Cliente cadastrado com sucesso!"
         except Exception as e:
-            self.conexao.rollback()
+            conexao.rollback()
             return False, f"Erro ao cadastrar cliente: {e}"
         finally:
             if cursor:
                 cursor.close()
+            if conexao:
+                conexao.close()
 
     def listar_todos(self):
-        if not self.conexao:
+        conexao = DatabaseConfig.get_connection()
+        if not conexao:
             return []
         cursor = None
         try:
-            cursor = self.conexao.cursor()
+            cursor = conexao.cursor()
             cursor.execute(
                 "SELECT cli_id, cli_nome, cli_cpf, cli_telefone, cli_email "
                 "FROM tb_clientes ORDER BY cli_nome"
@@ -55,34 +59,40 @@ class ClienteDAO(GenericDAO):
         finally:
             if cursor:
                 cursor.close()
+            if conexao:
+                conexao.close()
 
     def remover(self, id_cliente: int):
-        if not self.conexao:
+        conexao = DatabaseConfig.get_connection()
+        if not conexao:
             return False, "Não foi possível conectar ao banco de dados."
         cursor = None
         try:
-            cursor = self.conexao.cursor()
+            cursor = conexao.cursor()
             cursor.execute(
                 "DELETE FROM tb_clientes WHERE cli_id = %s", (id_cliente,)
             )
             if cursor.rowcount == 0:
-                self.conexao.rollback()
+                conexao.rollback()
                 return False, "Cliente não encontrado para remoção."
-            self.conexao.commit()
+            conexao.commit()
             return True, "Cliente removido com sucesso!"
         except Exception as e:
-            self.conexao.rollback()
+            conexao.rollback()
             return False, f"Erro ao remover cliente: {e}"
         finally:
             if cursor:
                 cursor.close()
+            if conexao:
+                conexao.close()
 
     def atualizar(self, cliente: Cliente):
-        if not self.conexao:
+        conexao = DatabaseConfig.get_connection()
+        if not conexao:
             return False, "Não foi possível conectar ao banco de dados."
         cursor = None
         try:
-            cursor = self.conexao.cursor()
+            cursor = conexao.cursor()
             query = """
                 UPDATE tb_clientes
                 SET cli_nome     = %s,
@@ -97,23 +107,26 @@ class ClienteDAO(GenericDAO):
                 cliente.id
             ))
             if cursor.rowcount == 0:
-                self.conexao.rollback()
+                conexao.rollback()
                 return False, "Cliente não encontrado para atualização."
-            self.conexao.commit()
+            conexao.commit()
             return True, "Cliente atualizado com sucesso!"
         except Exception as e:
-            self.conexao.rollback()
+            conexao.rollback()
             return False, f"Erro ao atualizar cliente: {e}"
         finally:
             if cursor:
                 cursor.close()
+            if conexao:
+                conexao.close()
 
     def buscar_por_id(self, id_cliente: int):
-        if not self.conexao:
+        conexao = DatabaseConfig.get_connection()
+        if not conexao:
             return None
         cursor = None
         try:
-            cursor = self.conexao.cursor()
+            cursor = conexao.cursor()
             cursor.execute(
                 "SELECT cli_id, cli_nome, cli_cpf, cli_telefone, cli_email "
                 "FROM tb_clientes WHERE cli_id = %s",
@@ -127,13 +140,16 @@ class ClienteDAO(GenericDAO):
         finally:
             if cursor:
                 cursor.close()
+            if conexao:
+                conexao.close()
 
     def buscar_por_cpf(self, cpf: str):
-        if not self.conexao:
+        conexao = DatabaseConfig.get_connection()
+        if not conexao:
             return None
         cursor = None
         try:
-            cursor = self.conexao.cursor()
+            cursor = conexao.cursor()
             cpf_limpo = cpf.strip().replace(".", "").replace("-", "")
             cursor.execute(
                 "SELECT cli_id, cli_nome, cli_cpf, cli_telefone, cli_email "
@@ -148,6 +164,8 @@ class ClienteDAO(GenericDAO):
         finally:
             if cursor:
                 cursor.close()
+            if conexao:
+                conexao.close()
 
     def _montar_cliente(self, linha):
         cli_id, nome, cpf, telefone, email = linha
