@@ -29,9 +29,9 @@ class JanelaListagemProfissionais(tk.Toplevel):
         scrollbar = ttk.Scrollbar(frame_tree)
         scrollbar.pack(side="right", fill="y")
 
-        colunas = ("Nome", "CPF", "Especialidades", "Disponível")
+        colunas = ("Nome", "CPF", "Especialidades")
         self.tree = ttk.Treeview(frame_tree, columns=colunas, show="headings", yscrollcommand=scrollbar.set)
-        larguras = {"Nome": 180, "CPF": 110, "Especialidades": 260, "Disponível": 80}
+        larguras = {"Nome": 180, "CPF": 110, "Especialidades": 260}
         for col in colunas:
             self.tree.heading(col, text=col)
             self.tree.column(col, anchor="center", width=larguras[col])
@@ -51,8 +51,7 @@ class JanelaListagemProfissionais(tk.Toplevel):
             self.tree.delete(row)
         for p in self.controller.listar_profissionais():
             self.tree.insert("", "end", iid=str(p.id), values=(
-                p.nome, p.cpf, p.especialidade,
-                "Sim" if p.disponivel else "Nao"
+                p.nome, p.cpf, p.especialidade
             ))
 
     def _id_selecionado(self):

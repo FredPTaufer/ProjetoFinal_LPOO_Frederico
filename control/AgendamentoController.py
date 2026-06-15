@@ -101,8 +101,6 @@ class AgendamentoController:
                 return False, "Profissional não encontrado."
             if not servico:
                 return False, "Serviço não encontrado."
-            if not profissional.disponivel:
-                return False, "Profissional não está disponível."
 
             if self.agendamento_dao.verificar_conflito(id_profissional, data_hora, servico.duracao):
                 return False, (

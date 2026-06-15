@@ -95,8 +95,7 @@ CREATE TABLE IF NOT EXISTS tb_profissionais (
     pro_id            SERIAL         PRIMARY KEY,
     pro_nome          VARCHAR(100)   NOT NULL,
     pro_cpf           CHAR(11)       UNIQUE NOT NULL,
-    pro_especialidade VARCHAR(100)   NOT NULL,
-    pro_disponivel    BOOLEAN        NOT NULL DEFAULT TRUE
+    pro_especialidade VARCHAR(100)   NOT NULL
 );
 
 -- Serviços

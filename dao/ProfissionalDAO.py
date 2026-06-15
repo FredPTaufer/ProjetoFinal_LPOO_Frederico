@@ -19,15 +19,14 @@ class ProfissionalDAO(GenericDAO):
             cursor = self.conexao.cursor()
             query = """
                 INSERT INTO tb_profissionais
-                    (pro_nome, pro_cpf, pro_especialidade, pro_disponivel)
-                VALUES (%s, %s, %s, %s)
+                    (pro_nome, pro_cpf, pro_especialidade)
+                VALUES (%s, %s, %s)
                 RETURNING pro_id
             """
             cursor.execute(query, (
                 profissional.nome,
                 profissional.cpf,
-                profissional.especialidade,
-                profissional.disponivel
+                profissional.especialidade
             ))
             profissional.id = cursor.fetchone()[0]
             self.conexao.commit()
@@ -46,7 +45,7 @@ class ProfissionalDAO(GenericDAO):
         try:
             cursor = self.conexao.cursor()
             cursor.execute(
-                "SELECT pro_id, pro_nome, pro_cpf, pro_especialidade, pro_disponivel "
+                "SELECT pro_id, pro_nome, pro_cpf, pro_especialidade "
                 "FROM tb_profissionais ORDER BY pro_nome"
             )
             return [self._montar_profissional(linha) for linha in cursor.fetchall()]
@@ -88,14 +87,12 @@ class ProfissionalDAO(GenericDAO):
             query = """
                 UPDATE tb_profissionais
                 SET pro_nome          = %s,
-                    pro_especialidade = %s,
-                    pro_disponivel    = %s
+                    pro_especialidade = %s
                 WHERE pro_id = %s
             """
             cursor.execute(query, (
                 profissional.nome,
                 profissional.especialidade,
-                profissional.disponivel,
                 profissional.id
             ))
             if cursor.rowcount == 0:
@@ -117,7 +114,7 @@ class ProfissionalDAO(GenericDAO):
         try:
             cursor = self.conexao.cursor()
             cursor.execute(
-                "SELECT pro_id, pro_nome, pro_cpf, pro_especialidade, pro_disponivel "
+                "SELECT pro_id, pro_nome, pro_cpf, pro_especialidade "
                 "FROM tb_profissionais WHERE pro_id = %s",
                 (id_profissional,)
             )
@@ -137,7 +134,7 @@ class ProfissionalDAO(GenericDAO):
         try:
             cursor = self.conexao.cursor()
             cursor.execute(
-                "SELECT pro_id, pro_nome, pro_cpf, pro_especialidade, pro_disponivel "
+                "SELECT pro_id, pro_nome, pro_cpf, pro_especialidade "
                 "FROM tb_profissionais "
                 "WHERE LOWER(pro_especialidade) = LOWER(%s) "
                 "ORDER BY pro_nome",
@@ -152,7 +149,6 @@ class ProfissionalDAO(GenericDAO):
                 cursor.close()
 
     def _montar_profissional(self, linha):
-        pro_id, nome, cpf, especialidade, disponivel = linha
+        pro_id, nome, cpf, especialidade = linha
         p = Profissional(nome=nome, cpf=cpf, especialidade=especialidade, id=pro_id)
-        p.disponivel = disponivel
         return p

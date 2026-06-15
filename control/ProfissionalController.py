@@ -27,14 +27,6 @@ class ProfissionalController:
             print(f"Erro ao buscar profissional: {e}")
             return None
 
-    def buscar_disponiveis(self):
-        try:
-            todos = self.profissional_dao.listar_todos()
-            return [p for p in todos if p.disponivel]
-        except Exception as e:
-            print(f"Erro ao buscar profissionais disponíveis: {e}")
-            return []
-
     def salvar_profissional(self, nome: str, cpf: str, especialidade: str):
         if not nome or not cpf or not especialidade:
             return False, "Todos os campos são obrigatórios."
@@ -65,7 +57,7 @@ class ProfissionalController:
         except Exception as e:
             return False, f"Erro ao salvar profissional: {e}"
 
-    def atualizar_profissional(self, id_profissional: int, nome: str, especialidade: str, disponivel: bool):
+    def atualizar_profissional(self, id_profissional: int, nome: str, especialidade: str):
         if not nome or not especialidade:
             return False, "Nome e especialidade são obrigatórios."
 
@@ -76,7 +68,6 @@ class ProfissionalController:
 
             profissional.nome = nome.strip()
             profissional.especialidade = especialidade.strip()
-            profissional.disponivel = disponivel
 
             return self.profissional_dao.atualizar(profissional)
 
@@ -96,8 +87,7 @@ class ProfissionalController:
             todos = self.profissional_dao.listar_todos()
             return [
                 p for p in todos
-                if p.disponivel and
-                nome_servico.strip().lower() in
+                if nome_servico.strip().lower() in
                 [e.strip().lower() for e in p.especialidade.split(",")]
             ]
         except Exception as e:

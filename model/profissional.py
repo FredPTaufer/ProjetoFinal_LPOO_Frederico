@@ -5,7 +5,6 @@ class Profissional(Pessoa):
     def __init__(self, nome: str, cpf: str, especialidade: str, id: int = None):
         super().__init__(nome, cpf)
         self.especialidade = especialidade
-        self.disponivel = True
         self.id = id
         self.__servicos = []
 
@@ -18,14 +17,6 @@ class Profissional(Pessoa):
         if not valor or not valor.strip():
             raise ValueError("Especialidade não pode ser vazia.")
         self.__especialidade = valor.strip()
-
-    @property
-    def disponivel(self):
-        return self.__disponivel
-
-    @disponivel.setter
-    def disponivel(self, valor):
-        self.__disponivel = bool(valor)
 
     @property
     def id(self):
@@ -46,5 +37,4 @@ class Profissional(Pessoa):
         return any(type(s).__name__ == type(servico).__name__ for s in self.__servicos)
 
     def __str__(self):
-        status = "Disponível" if self.disponivel else "Indisponível"
-        return (f"Profissional: {self.nome} | CPF: {self.cpf} | Especialidade: {self.especialidade} | Status: {status}")
+        return (f"Profissional: {self.nome} | CPF: {self.cpf} | Especialidade: {self.especialidade}")

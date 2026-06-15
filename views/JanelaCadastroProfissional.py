@@ -105,8 +105,7 @@ class JanelaCadastroProfissional(tk.Toplevel):
         sucesso, msg = self.controller.atualizar_profissional(
             id_profissional = self.profissional.id,
             nome = self.txt_nome.get(),
-            especialidade = especialidades,
-            disponivel = True
+            especialidade = especialidades
         )
         if sucesso:
             messagebox.showinfo("Sucesso", msg, parent=self)
