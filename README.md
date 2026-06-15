@@ -255,5 +255,5 @@ ProjetoFinal_LPOO_Frederico/
 
 - [x] **Utilizei IA** como ferramenta de apoio.
 - **Ferramenta:** Claude Sonnet 4.6
-- **Finalidade:** Apoio no planejamento e estruturação do projeto, definição da divisão das views e organização das responsabilidades seguindo o padrão MVC, auxílio na formatação e organização do código. Também foi utilizada para auxiliar na criação dos scripts SQL de criação e população do banco de dados, na identificação e correção de erros durante o desenvolvimento e na elaboração deste README.
+- **Finalidade:** Apoio no planejamento e estruturação do projeto, definição da divisão das views e organização das responsabilidades seguindo o padrão MVC, auxílio na formatação e organização do código, ajudando também na elaboração das docstrings. Também foi utilizada para auxiliar na criação dos scripts SQL de criação e população do banco de dados, na identificação e correção de erros durante o desenvolvimento e na elaboração deste README.
 - **Validação:** Todo o código gerado foi lido, compreendido e testado. As decisões de estrutura, arquitetura e padrões de projeto foram tomadas com base no conteúdo das aulas.
