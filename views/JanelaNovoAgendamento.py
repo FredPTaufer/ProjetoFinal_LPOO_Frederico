@@ -20,13 +20,13 @@ class JanelaNovoAgendamento(tk.Toplevel):
         self.geometry("440x480")
         self.resizable(False, False)
 
-        self.controller     = AgendamentoController()
+        self.controller = AgendamentoController()
         self.pro_controller = ProfissionalController()
         self.ser_controller = ServicoController()
 
         self._profissionais = []
-        self._servicos      = []
-        self._slots         = []
+        self._servicos = []
+        self._slots = []
 
         tk.Label(self, text="Novo Agendamento", font=("Arial", 15, "bold")).pack(pady=10)
 
@@ -37,7 +37,7 @@ class JanelaNovoAgendamento(tk.Toplevel):
         frame = tk.Frame(self, padx=20)
         frame.pack(fill="x")
 
-        # Servico
+        # Serviço
         tk.Label(frame, text="1. Serviço:").grid(row=0, column=0, sticky="w", pady=5)
         self.cb_servico = ttk.Combobox(frame, state="readonly", width=32)
         self.cb_servico.grid(row=0, column=1, pady=5, sticky="ew")
@@ -58,7 +58,7 @@ class JanelaNovoAgendamento(tk.Toplevel):
         self.cal_data.grid(row=3, column=1, pady=5, sticky="w")
         self.cal_data.bind("<<DateEntrySelected>>", self._ao_selecionar_data)
 
-        # Horarios disponíveis
+        # Horários disponíveis
         tk.Label(frame, text="4. Horário:").grid(row=4, column=0, sticky="nw", pady=5)
 
         frame_slots = tk.Frame(frame)
@@ -81,10 +81,12 @@ class JanelaNovoAgendamento(tk.Toplevel):
         tk.Button(frame_botoes, text="Fechar", width=10, command=self.destroy).pack(side="right", padx=5)
 
     def _carregar_servicos(self):
+        """Carrega os serviços disponíveis na combobox"""
         self._servicos = self.ser_controller.listar_servicos()
         self.cb_servico["values"] = [s.nome for s in self._servicos]
 
     def _ao_selecionar_servico(self, event=None):
+        """Carrega os profissionais disponíveis para o serviço selecionado"""
         idx = self.cb_servico.current()
         if idx == -1:
             return
@@ -110,6 +112,7 @@ class JanelaNovoAgendamento(tk.Toplevel):
         self._carregar_horarios()
 
     def _carregar_horarios(self):
+        """Carrega os horários disponíveis para o profissional e data selecionados"""
         idx_pro = self.cb_profissional.current()
         idx_ser = self.cb_servico.current()
         if idx_pro == -1 or idx_ser == -1:
@@ -131,6 +134,7 @@ class JanelaNovoAgendamento(tk.Toplevel):
             self.lbl_aviso_slot.config(text=f"{len(self._slots)} horário(s) disponível(is).")
 
     def solicitar_agendamento(self):
+        """Tenta criar um novo agendamento com os dados selecionados"""
         if self.cb_servico.current() == -1:
             messagebox.showwarning("Aviso", "Selecione um serviço.", parent=self)
             return

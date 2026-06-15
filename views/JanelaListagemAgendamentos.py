@@ -21,6 +21,7 @@ class JanelaListagemAgendamentos(tk.Toplevel):
         self.carregar_dados()
 
     def criar_widgets(self):
+        """Cria os widgets da janela de listagem de agendamentos"""
         tk.Label(self, text="Gerenciamento de Agendamentos", font=("Arial", 16, "bold")).pack(pady=10)
 
         frame_tree = tk.Frame(self)
@@ -50,6 +51,7 @@ class JanelaListagemAgendamentos(tk.Toplevel):
         tk.Button(frame_botoes, text="Fechar", width=10, command=self.destroy).pack(side="right", padx=5)
 
     def carregar_dados(self):
+        """Carrega os dados dos agendamentos no treeview"""
         for row in self.tree.get_children():
             self.tree.delete(row)
         for a in self.controller.listar_agendamentos():
@@ -63,6 +65,7 @@ class JanelaListagemAgendamentos(tk.Toplevel):
             ))
 
     def _id_selecionado(self):
+        """Retorna o id do agendamento selecionado"""
         sel = self.tree.selection()
         if not sel:
             messagebox.showwarning("Aviso", "Selecione um agendamento.", parent=self)
@@ -70,11 +73,13 @@ class JanelaListagemAgendamentos(tk.Toplevel):
         return int(sel[0])
 
     def abrir_novo(self):
+        """Abre a janela de cadastro de agendamento"""
         janela = JanelaCadastroAgendamento(self)
         self.wait_window(janela)
         self.carregar_dados()
 
     def abrir_editar(self):
+        """Abre a janela de edição de agendamento"""
         id_age = self._id_selecionado()
         if id_age is None:
             return
@@ -88,6 +93,7 @@ class JanelaListagemAgendamentos(tk.Toplevel):
         self.carregar_dados()
 
     def ver_detalhes(self):
+        """Exibe uma janela com os detalhes do agendamento selecionado"""
         id_age = self._id_selecionado()
         if id_age is None:
             return
@@ -108,6 +114,7 @@ class JanelaListagemAgendamentos(tk.Toplevel):
         messagebox.showinfo("Detalhes do Agendamento", msg, parent=self)
 
     def concluir(self):
+        """Conclui o agendamento selecionado"""
         id_age = self._id_selecionado()
         if id_age is None:
             return
@@ -119,6 +126,7 @@ class JanelaListagemAgendamentos(tk.Toplevel):
             messagebox.showerror("Erro", msg, parent=self)
 
     def cancelar(self):
+        """Cancela o agendamento selecionado"""
         id_age = self._id_selecionado()
         if id_age is None:
             return

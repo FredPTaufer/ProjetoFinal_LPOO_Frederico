@@ -16,6 +16,7 @@ from model.ExcecoesPersonalizadas import DataHoraInvalidaError
 
 
 def _string_para_estrategia(valor: str):
+    """Converte uma string em um objeto de estratégia de preço"""
     if valor.strip().lower() == "promocional":
         return PrecoPromocional()
     if valor.strip().lower() == "fidelidade":
@@ -38,6 +39,7 @@ class AgendamentoController:
             return []
 
     def buscar_por_id(self, id_agendamento: int):
+        """Busca um agendamento pelo ID e retorna o objeto correspondente, ou None se não encontrado"""
         try:
             return self.agendamento_dao.buscar_por_id(id_agendamento)
         except Exception as e:
@@ -45,6 +47,7 @@ class AgendamentoController:
             return None
 
     def buscar_por_cliente(self, id_cliente: int):
+        """Busca todos os agendamentos de um cliente específico e retorna uma lista de objetos Agendamento"""
         try:
             return self.agendamento_dao.buscar_por_cliente(id_cliente)
         except Exception as e:
@@ -52,6 +55,7 @@ class AgendamentoController:
             return []
 
     def horarios_disponiveis(self, id_profissional: int, id_servico: int, data_str: str, id_agendamento: int = None):
+        """Retorna uma lista de horários disponíveis para um profissional e serviço em uma data específica"""
         try:
             data_obj = datetime.strptime(data_str.strip(), "%d/%m/%Y").date()
             servico = self.servico_dao.buscar_por_id(id_servico)
@@ -82,6 +86,7 @@ class AgendamentoController:
             return []
 
     def criar_agendamento(self, id_cliente: int, id_profissional: int, id_servico: int, data_hora_str: str, estrategia_str: str = "normal"):
+        """Cria um novo agendamento com os dados fornecidos e retorna uma tupla (sucesso: bool, mensagem: str)"""
         if not id_cliente or not id_profissional or not id_servico or not data_hora_str:
             return False, "Todos os campos são obrigatórios."
 
@@ -128,6 +133,7 @@ class AgendamentoController:
             return False, f"Erro ao criar agendamento: {e}"
 
     def atualizar_agendamento(self, id_agendamento: int, id_cliente: int, id_profissional: int, id_servico: int, data_hora_str: str, estrategia_str: str, status_str: str):
+        """Atualiza um agendamento existente com os dados fornecidos e retorna uma tupla (sucesso: bool, mensagem: str)"""
         if not all([id_agendamento, id_cliente, id_profissional, id_servico, data_hora_str, estrategia_str, status_str]):
             return False, "Todos os campos são obrigatórios."
 
@@ -171,6 +177,7 @@ class AgendamentoController:
             return False, f"Erro ao atualizar agendamento: {e}"
 
     def concluir(self, id_agendamento: int):
+        """Conclui um agendamento e retorna uma tupla (sucesso: bool, mensagem: str)"""
         try:
             agendamento = self.agendamento_dao.buscar_por_id(id_agendamento)
             if not agendamento:
@@ -183,6 +190,7 @@ class AgendamentoController:
             return False, f"Erro ao concluir agendamento: {e}"
 
     def cancelar(self, id_agendamento: int):
+        """Cancela um agendamento e retorna uma tupla (sucesso: bool, mensagem: str)"""
         try:
             agendamento = self.agendamento_dao.buscar_por_id(id_agendamento)
             if not agendamento:
@@ -195,7 +203,7 @@ class AgendamentoController:
             return False, f"Erro ao cancelar agendamento: {e}"
 
     def remover_agendamento(self, id_agendamento: int):
-        
+        """Remove um agendamento e retorna uma tupla (sucesso: bool, mensagem: str)"""
         try:
             return self.agendamento_dao.remover(id_agendamento)
         except Exception as e:

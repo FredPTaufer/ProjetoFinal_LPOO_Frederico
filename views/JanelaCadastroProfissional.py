@@ -35,6 +35,7 @@ class JanelaCadastroProfissional(tk.Toplevel):
             self.preencher_campos()
 
     def criar_widgets(self):
+        """Cria os widgets da janela de cadastro/edição de profissional"""
         frame = tk.Frame(self, padx=20)
         frame.pack(fill="x")
 
@@ -68,9 +69,11 @@ class JanelaCadastroProfissional(tk.Toplevel):
         tk.Button(frame_botoes, text="Fechar", width=10, command=self.destroy).pack(side="right", padx=5)
 
     def _especialidades_selecionadas(self):
+        """Retorna uma string com as especialidades selecionadas"""
         return ", ".join(esp for esp, var in self.vars_especialidades.items() if var.get())
 
     def preencher_campos(self):
+        """Preenche os campos com os dados do profissional, caso seja uma edição"""
         self.txt_nome.insert(0, self.profissional.nome)
         self.txt_cpf.insert(0, self.profissional.cpf)
         self.txt_cpf.configure(state="disabled")
@@ -80,6 +83,7 @@ class JanelaCadastroProfissional(tk.Toplevel):
             var.set(esp in especialidades_salvas)
 
     def solicitar_cadastro(self):
+        """Solicita ao controller que crie um novo profissional"""
         especialidades = self._especialidades_selecionadas()
         if not especialidades:
             messagebox.showwarning("Aviso", "Selecione ao menos uma especialidade.", parent=self)
@@ -97,6 +101,7 @@ class JanelaCadastroProfissional(tk.Toplevel):
             messagebox.showerror("Erro", msg, parent=self)
 
     def solicitar_atualizacao(self):
+        """Solicita ao controller que atualize um profissional existente"""
         especialidades = self._especialidades_selecionadas()
         if not especialidades:
             messagebox.showwarning("Aviso", "Selecione ao menos uma especialidade.", parent=self)

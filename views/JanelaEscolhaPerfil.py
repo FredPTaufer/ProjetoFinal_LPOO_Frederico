@@ -25,12 +25,14 @@ class JanelaEscolhaPerfil(tk.Tk):
 
 
     def _abrir_admin(self):
+        """Abre a janela principal do administrador"""
         from views.JanelaPrincipalAdmin import JanelaPrincipalAdmin
         self.destroy()
         app = JanelaPrincipalAdmin()
         app.mainloop()
 
     def _abrir_cliente(self):
+        """Abre a janela de login do cliente"""
         from views.JanelaLoginCliente import JanelaLoginCliente
         self.destroy()
         app = JanelaLoginCliente()

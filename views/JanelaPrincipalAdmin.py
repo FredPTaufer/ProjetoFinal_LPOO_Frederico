@@ -44,6 +44,7 @@ class JanelaPrincipalAdmin(tk.Tk):
         menu_sistema.add_command(label="Sair", command=self._sair)
 
     def _criar_tela_inicial(self):
+        """Exibe uma tela inicial com informações básicas sobre o sistema e opções de navegação"""
         tk.Label(self, text="Painel do Administrador", font=("Arial", 16, "bold")).pack(pady=(30, 5))
         tk.Label(self, text="Perfil: Administrador", font=("Arial", 10), fg="#4a90d9").pack(pady=2)
         tk.Frame(self, height=1, bg="lightgray").pack(fill="x", padx=20, pady=12)
@@ -52,26 +53,32 @@ class JanelaPrincipalAdmin(tk.Tk):
                       "Sistema: Sobre | Sair", font=("Arial", 9), fg="gray", justify="center").pack()
 
     def _abrir_clientes(self):
+        """Abre a janela de listagem de clientes"""
         janela = JanelaListagemClientes(self)
         self.wait_window(janela)
 
     def _abrir_profissionais(self):
+        """Abre a janela de listagem de profissionais"""
         janela = JanelaListagemProfissionais(self)
         self.wait_window(janela)
 
     def _abrir_servicos(self):
+        """Abre a janela de listagem de serviços"""
         janela = JanelaListagemServicos(self)
         self.wait_window(janela)
 
     def _abrir_agendamentos(self):
+        """Abre a janela de listagem de agendamentos"""
         janela = JanelaListagemAgendamentos(self)
         self.wait_window(janela)
 
     def _abrir_sobre(self):
+        """Abre a janela sobre o sistema"""
         janela = JanelaSobre(self)
         self.wait_window(janela)
 
     def _sair(self):
+        """Confirmação para sair do sistema e volta para a escolha de perfil"""
         from views.JanelaEscolhaPerfil import JanelaEscolhaPerfil
         self.destroy()
         app = JanelaEscolhaPerfil()

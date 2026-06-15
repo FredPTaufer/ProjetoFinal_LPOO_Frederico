@@ -51,6 +51,7 @@ class JanelaHistoricoCliente(tk.Toplevel):
         tk.Button(self, text="Fechar", width=10, command=self.destroy).pack(pady=8)
 
     def carregar_historico(self):
+        """Carrega o histórico de atendimentos do cliente e exibe na tabela"""
         for row in self.tree.get_children():
             self.tree.delete(row)
 

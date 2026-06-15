@@ -56,6 +56,7 @@ class JanelaCadastroCliente(tk.Toplevel):
         tk.Button(frame_botoes, text="Fechar", width=10, command=self.destroy).pack(side="right", padx=5)
 
     def preencher_campos(self):
+        """Preenche os campos com os dados do cliente"""
         self.txt_nome.insert(0, self.cliente.nome)
         self.txt_cpf.insert(0, self.cliente.cpf)
         self.txt_cpf.configure(state="disabled")
@@ -63,6 +64,7 @@ class JanelaCadastroCliente(tk.Toplevel):
         self.txt_email.insert(0, self.cliente.email)
 
     def solicitar_cadastro(self):
+        """Solicita ao controller que crie um novo cliente"""
         sucesso, msg = self.controller.salvar_cliente(
             nome = self.txt_nome.get(),
             cpf = self.txt_cpf.get(),
@@ -76,6 +78,7 @@ class JanelaCadastroCliente(tk.Toplevel):
             messagebox.showerror("Erro", msg, parent=self)
 
     def solicitar_atualizacao(self):
+        """Solicita ao controller que atualize um cliente existente"""
         sucesso, msg = self.controller.atualizar_cliente(
             id_cliente = self.cliente.id,
             nome = self.txt_nome.get(),

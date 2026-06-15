@@ -26,6 +26,7 @@ class ServicoController:
             return None
 
     def tipos_disponiveis(self):
+        """Retorna uma lista com os tipos de serviços disponíveis"""
         return ServiceFactory.tipos_disponiveis()
 
     def salvar_servico(self, tipo: str, preco_str: str):

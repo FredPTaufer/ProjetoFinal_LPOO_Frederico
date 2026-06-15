@@ -32,10 +32,11 @@ class JanelaLoginCliente(tk.Tk):
         self.txt_cpf.bind("<Return>", lambda e: self._entrar())
 
         tk.Button(self, text="Entrar", font=("Arial", 11), width=20, height=1, bg="#5cb85c", fg="white", relief="flat", command=self._entrar).pack(pady=8)
-        tk.Button(self, text="Nao tenho cadastro — Registrar-me", font=("Arial", 9), fg="#4a90d9", relief="flat", cursor="hand2", command=self._registrar).pack()
+        tk.Button(self, text="Não tenho cadastro — Registrar-me", font=("Arial", 9), fg="#4a90d9", relief="flat", cursor="hand2", command=self._registrar).pack()
         tk.Button(self, text="Voltar", font=("Arial", 9), fg="gray", relief="flat", cursor="hand2", command=self._voltar).pack(pady=4)
 
     def _entrar(self):
+        """Tenta autenticar o cliente pelo CPF e abrir a janela principal do cliente"""
         cpf = self.txt_cpf.get().strip()
         if not cpf:
             messagebox.showwarning("Aviso", "Informe seu CPF.", parent=self)
@@ -60,6 +61,7 @@ class JanelaLoginCliente(tk.Tk):
         app.mainloop()
 
     def _registrar(self):
+        """Abre uma janela para novo cadastro de cliente"""
         janela_cad = tk.Toplevel(self)
         janela_cad.title("Novo Cadastro")
         janela_cad.geometry("400x320")
@@ -91,6 +93,7 @@ class JanelaLoginCliente(tk.Tk):
         frame.columnconfigure(1, weight=1)
 
         def confirmar_cadastro():
+            """Tenta cadastrar o cliente com os dados informados"""
             sucesso, msg = self.controller.salvar_cliente(
                 nome = txt_nome.get(),
                 cpf = txt_cpf.get(),

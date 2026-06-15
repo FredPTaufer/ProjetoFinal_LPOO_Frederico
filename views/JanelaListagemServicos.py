@@ -84,7 +84,7 @@ class JanelaListagemServicos(tk.Toplevel):
         def confirmar():
             sucesso, msg = self.controller.atualizar_servico(
                 id_servico = id_ser,
-                preco_str  = txt_preco.get()
+                preco_str = txt_preco.get()
             )
             if sucesso:
                 janela.destroy()

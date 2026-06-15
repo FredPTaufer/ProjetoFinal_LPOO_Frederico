@@ -21,6 +21,7 @@ class ClienteController:
             return []
 
     def buscar_por_id(self, id_cliente: int):
+        """Busca um cliente pelo ID e retorna o objeto correspondente, ou None se não encontrado"""
         try:
             return self.cliente_dao.buscar_por_id(id_cliente)
         except Exception as e:
@@ -28,6 +29,7 @@ class ClienteController:
             return None
 
     def buscar_por_cpf(self, cpf: str):
+        """Busca um cliente pelo CPF e retorna o objeto correspondente, ou None se não encontrado"""
         try:
             return self.cliente_dao.buscar_por_cpf(cpf.strip())
         except Exception as e:
@@ -35,6 +37,7 @@ class ClienteController:
             return None
 
     def salvar_cliente(self, nome: str, cpf: str, telefone: str, email: str):
+        """Salva um novo cliente no banco de dados."""
         if not nome or not cpf or not telefone or not email:
             return False, "Todos os campos são obrigatórios."
 
@@ -66,6 +69,7 @@ class ClienteController:
             return False, f"Erro ao salvar cliente: {e}"
 
     def atualizar_cliente(self, id_cliente: int, nome: str, telefone: str, email: str):
+        """Atualiza os dados de um cliente existente."""
         if not nome or not telefone or not email:
             return False, "Todos os campos são obrigatórios."
 
@@ -86,6 +90,7 @@ class ClienteController:
             return False, f"Erro ao atualizar cliente: {e}"
 
     def remover_cliente(self, id_cliente: int):
+        """Remove um cliente do banco de dados."""
         try:
             return self.cliente_dao.remover(id_cliente)
         except Exception as e:

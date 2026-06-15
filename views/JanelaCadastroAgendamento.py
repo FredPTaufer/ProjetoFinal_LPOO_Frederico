@@ -40,6 +40,7 @@ class JanelaCadastroAgendamento(tk.Toplevel):
             self.preencher_campos()
 
     def criar_widgets(self):
+        """Cria os widgets da janela de cadastro/edição de agendamento"""
         frame = tk.Frame(self, padx=20)
         frame.pack(fill="x")
 
@@ -98,12 +99,14 @@ class JanelaCadastroAgendamento(tk.Toplevel):
         tk.Button(frame_botoes, text="Fechar", width=10, command=self.destroy).pack(side="right", padx=5)
 
     def _carregar_clientes_servicos(self):
+        """Carrega clientes e serviços para os comboboxes"""
         self._clientes = self.cli_controller.listar_clientes()
         self.cb_cliente["values"] = [f"{c.nome} ({c.cpf})" for c in self._clientes]
         self._servicos = self.ser_controller.listar_servicos()
         self.cb_servico["values"] = [s.nome for s in self._servicos]
 
     def _ao_selecionar_servico(self, event=None):
+        """Carrega os profissionais disponíveis para esse serviço"""
         idx = self.cb_servico.current()
         if idx == -1:
             return
@@ -131,6 +134,7 @@ class JanelaCadastroAgendamento(tk.Toplevel):
         self._carregar_horarios()
 
     def _carregar_horarios(self):
+        """Carrega os horários disponíveis para o profissional, serviço e data selecionados"""
         idx_pro = self.cb_profissional.current()
         idx_ser = self.cb_servico.current()
         if idx_pro == -1 or idx_ser == -1:
@@ -159,6 +163,7 @@ class JanelaCadastroAgendamento(tk.Toplevel):
         return self._slots[sel[0]]
 
     def preencher_campos(self):
+        """Preenche os campos com os dados do agendamento a ser editado"""
         a = self.agendamento
         for i, c in enumerate(self._clientes):
             if c.id == a.cliente.id:
@@ -186,6 +191,7 @@ class JanelaCadastroAgendamento(tk.Toplevel):
         self.cb_status.set(a.status.value)
 
     def solicitar_cadastro(self):
+        """Solicita ao controller que crie um novo agendamento"""
         if self.cb_cliente.current() == -1 or self.cb_profissional.current() == -1 \
                 or self.cb_servico.current() == -1:
             messagebox.showwarning("Aviso", "Preencha todos os campos.", parent=self)
@@ -213,6 +219,7 @@ class JanelaCadastroAgendamento(tk.Toplevel):
             messagebox.showerror("Erro", msg, parent=self)
 
     def solicitar_atualizacao(self):
+        """Solicita ao controller que atualize um agendamento"""
         if self.cb_cliente.current() == -1 or self.cb_profissional.current() == -1 \
                 or self.cb_servico.current() == -1:
             messagebox.showwarning("Aviso", "Preencha todos os campos.", parent=self)

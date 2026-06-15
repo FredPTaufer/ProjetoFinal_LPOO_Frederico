@@ -16,6 +16,7 @@ from model.PrecoFidelidade import PrecoFidelidade
 
 
 def _estrategia_para_string(estrategia):
+    """Converte um objeto de estratégia de preço em uma string para armazenamento no banco"""
     nome = type(estrategia).__name__.lower()
     if "promocional" in nome:
         return "promocional"
@@ -25,6 +26,7 @@ def _estrategia_para_string(estrategia):
 
 
 def _string_para_estrategia(valor: str):
+    """Converte uma string em um objeto de estratégia de preço"""
     if valor == "promocional":
         return PrecoPromocional()
     if valor == "fidelidade":
@@ -40,6 +42,7 @@ class AgendamentoDAO(GenericDAO):
         self._ser_dao = ServicoDAO()
 
     def salvar(self, agendamento: Agendamento):
+        """Salva um agendamento no banco de dados"""
         if not agendamento.cliente.id:
             return False, "Cliente não está cadastrado no banco."
         if not agendamento.profissional.id:
@@ -81,6 +84,7 @@ class AgendamentoDAO(GenericDAO):
                 conexao.close()
 
     def listar_todos(self):
+        """Lista todos os agendamentos do banco de dados"""
         conexao = DatabaseConfig.get_connection()
         if not conexao:
             return []
@@ -111,6 +115,7 @@ class AgendamentoDAO(GenericDAO):
                 conexao.close()
 
     def remover(self, id_agendamento: int):
+        """Remove um agendamento pelo ID"""
         conexao = DatabaseConfig.get_connection()
         if not conexao:
             return False, "Não foi possível conectar ao banco de dados."
@@ -136,6 +141,7 @@ class AgendamentoDAO(GenericDAO):
                 conexao.close()
 
     def atualizar(self, agendamento: Agendamento):
+        """Atualiza os dados de um agendamento existente"""
         if not agendamento.cliente.id:
             return False, "Cliente não está cadastrado no banco."
         if not agendamento.profissional.id:
@@ -183,6 +189,7 @@ class AgendamentoDAO(GenericDAO):
                 conexao.close()
 
     def buscar_por_id(self, id_agendamento: int):
+        """Busca um agendamento pelo ID"""
         conexao = DatabaseConfig.get_connection()
         if not conexao:
             return None
@@ -209,6 +216,7 @@ class AgendamentoDAO(GenericDAO):
                 conexao.close()
 
     def buscar_por_cliente(self, id_cliente: int):
+        """Busca todos os agendamentos de um cliente pelo ID"""
         conexao = DatabaseConfig.get_connection()
         if not conexao:
             return []
@@ -238,6 +246,7 @@ class AgendamentoDAO(GenericDAO):
                 conexao.close()
 
     def atualizar_status(self, id_agendamento: int, novo_status: StatusAgendamento):
+        """Atualiza o status de um agendamento"""
         conexao = DatabaseConfig.get_connection()
         if not conexao:
             return False, "Não foi possível conectar ao banco de dados."
@@ -263,6 +272,7 @@ class AgendamentoDAO(GenericDAO):
                 conexao.close()
 
     def verificar_conflito(self, id_profissional: int, data_hora: datetime, duracao_novo: int, ignorar_id: int = None):
+        """Verifica se há um conflito de horário para um profissional em um determinado horário e duração"""
         conexao = DatabaseConfig.get_connection()
         if not conexao:
             return False
@@ -296,6 +306,7 @@ class AgendamentoDAO(GenericDAO):
                 conexao.close()
 
     def _montar_agendamento(self, linha):
+        """Monta um objeto Agendamento a partir de uma linha do banco de dados"""
         age_id, cli_id, pro_id, ser_id, data_hora, status_str, estrategia_str = linha
 
         cliente = self._cli_dao.buscar_por_id(cli_id)

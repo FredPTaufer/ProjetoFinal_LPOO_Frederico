@@ -58,11 +58,13 @@ class JanelaListagemClientes(tk.Toplevel):
         self._preencher_tree(self.controller.listar_clientes())
 
     def filtrar_dados(self):
+        """Busca clientes por nome"""
         termo = self.txt_busca.get().strip().lower()
         todos = self.controller.listar_clientes()
         self._preencher_tree([c for c in todos if termo in c.nome.lower()] if termo else todos)
 
     def _preencher_tree(self, clientes):
+        """Atualiza a treeview com a lista de clientes"""
         for row in self.tree.get_children():
             self.tree.delete(row)
         for c in clientes:
@@ -71,6 +73,7 @@ class JanelaListagemClientes(tk.Toplevel):
             ))
 
     def _id_selecionado(self):
+        """Retorna o ID do cliente selecionado ou None se nada estiver selecionado"""
         sel = self.tree.selection()
         if not sel:
             messagebox.showwarning("Aviso", "Selecione um cliente.", parent=self)

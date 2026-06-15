@@ -47,12 +47,11 @@ class JanelaListagemProfissionais(tk.Toplevel):
         tk.Button(frame_botoes, text="Fechar", width=10, command=self.destroy).pack(side="right", padx=5)
 
     def carregar_dados(self):
+        """Carrega os dados dos profissionais no treeview"""
         for row in self.tree.get_children():
             self.tree.delete(row)
         for p in self.controller.listar_profissionais():
-            self.tree.insert("", "end", iid=str(p.id), values=(
-                p.nome, p.cpf, p.especialidade
-            ))
+            self.tree.insert("", "end", iid=str(p.id), values=(p.nome, p.cpf, p.especialidade))
 
     def _id_selecionado(self):
         sel = self.tree.selection()

@@ -143,6 +143,7 @@ class ProfissionalDAO(GenericDAO):
                 conexao.close()
 
     def buscar_por_tipo(self, especialidade: str):
+        """Busca profissionais pela especialidade"""
         conexao = DatabaseConfig.get_connection()
         if not conexao:
             return []
@@ -167,6 +168,7 @@ class ProfissionalDAO(GenericDAO):
                 conexao.close()
 
     def _montar_profissional(self, linha):
+        """Converte uma linha da tabela de profissionais em um objeto Profissional"""
         pro_id, nome, cpf, especialidade = linha
         p = Profissional(nome=nome, cpf=cpf, especialidade=especialidade, id=pro_id)
         return p

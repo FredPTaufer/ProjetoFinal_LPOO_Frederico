@@ -136,6 +136,7 @@ class ServicoDAO(GenericDAO):
                 conexao.close()
 
     def buscar_por_tipo(self, tipo: str):
+        """Busca serviços pelo tipo"""
         conexao = DatabaseConfig.get_connection()
         if not conexao:
             return None
@@ -159,5 +160,6 @@ class ServicoDAO(GenericDAO):
                 conexao.close()
 
     def _montar_servico(self, linha):
+        """Converte uma linha da tabela de serviços em um objeto Serviço"""
         ser_id, tipo, preco = linha
         return ServiceFactory.criar(tipo=tipo, preco=float(preco), id=ser_id)

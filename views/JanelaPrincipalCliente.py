@@ -41,6 +41,7 @@ class JanelaPrincipalCliente(tk.Tk):
         menu_sistema.add_command(label="Sair",  command=self._sair)
 
     def _criar_tela_inicial(self):
+        """Exibe uma tela inicial com informações básicas sobre o sistema e opções de navegação"""
         nome = self.cliente.nome if self.cliente else "Cliente"
         tk.Label(self, text=f"Bem-vindo, {nome}!", font=("Arial", 16, "bold")).pack(pady=(30, 5))
         tk.Label(self, text="Perfil: Cliente", font=("Arial", 10), fg="#5cb85c").pack(pady=2)
@@ -49,22 +50,27 @@ class JanelaPrincipalCliente(tk.Tk):
                       "Sistema: Sobre | Sair", font=("Arial", 9), fg="gray", justify="center").pack()
 
     def _abrir_novo_agendamento(self):
+        """Abre a janela para agendamento de novos serviços"""
         janela = JanelaNovoAgendamento(self, id_cliente=self.cliente.id if self.cliente else None)
         self.wait_window(janela)
 
     def _abrir_meus_agendamentos(self):
+        """Abre a janela com os agendamentos do cliente logado"""
         janela = JanelaMeusAgendamentos(self, cliente=self.cliente)
         self.wait_window(janela)
 
     def _abrir_historico(self):
+        """Abre a janela com o histórico de agendamentos do cliente logado"""
         janela = JanelaHistoricoCliente(self, cliente=self.cliente)
         self.wait_window(janela)
 
     def _abrir_sobre(self):
+        """Abre a janela sobre o sistema"""
         janela = JanelaSobre(self)
         self.wait_window(janela)
 
     def _sair(self):
+        """Confirmação para sair do sistema e volta para a tela de login do cliente"""
         self.destroy()
         app = JanelaLoginCliente()
         app.mainloop()

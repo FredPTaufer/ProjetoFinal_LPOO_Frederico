@@ -28,6 +28,7 @@ class ProfissionalController:
             return None
 
     def salvar_profissional(self, nome: str, cpf: str, especialidade: str):
+        """Salva um novo profissional"""
         if not nome or not cpf or not especialidade:
             return False, "Todos os campos são obrigatórios."
 
@@ -58,6 +59,7 @@ class ProfissionalController:
             return False, f"Erro ao salvar profissional: {e}"
 
     def atualizar_profissional(self, id_profissional: int, nome: str, especialidade: str):
+        """Atualiza um profissional existente"""
         if not nome or not especialidade:
             return False, "Nome e especialidade são obrigatórios."
 
@@ -83,6 +85,7 @@ class ProfissionalController:
             return False, f"Erro ao remover profissional: {e}"
 
     def buscar_por_servico(self, nome_servico: str):
+        """Filtra profissionais por serviço (especialidade)"""
         try:
             todos = self.profissional_dao.listar_todos()
             return [

@@ -144,6 +144,7 @@ class ClienteDAO(GenericDAO):
                 conexao.close()
 
     def buscar_por_cpf(self, cpf: str):
+        """Busca um cliente pelo CPF"""
         conexao = DatabaseConfig.get_connection()
         if not conexao:
             return None
@@ -168,5 +169,6 @@ class ClienteDAO(GenericDAO):
                 conexao.close()
 
     def _montar_cliente(self, linha):
+        """Converte uma linha da tabela de clientes em um objeto Cliente"""
         cli_id, nome, cpf, telefone, email = linha
         return Cliente(nome=nome, cpf=cpf, telefone=telefone, email=email, id=cli_id)
